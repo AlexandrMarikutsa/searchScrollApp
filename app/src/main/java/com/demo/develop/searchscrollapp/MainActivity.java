@@ -17,13 +17,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends Activity {
     private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
 //        try {
 //            Thread.sleep(8000);
@@ -93,21 +93,7 @@ public class MainActivity extends ListActivity {
             items.add(s);
         }
 
-//        ListView listView = (ListView) findViewById(R.id.listView);
-//        listView.setAdapter(new Adapter(MainActivity.this,items));
-
-        setListAdapter(new Adapter(this, items));
-        ListView lv = getListView();
-
-        lv.setFastScrollEnabled(true);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                // When clicked, show a toast with the TextView text
-                Toast.makeText(getApplicationContext(),
-                        ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(new Adapter(MainActivity.this,items));
     }
 }

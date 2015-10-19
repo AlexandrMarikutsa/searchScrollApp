@@ -2,8 +2,15 @@ package com.demo.develop.searchscrollapp.adapter;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
+import android.widget.TextView;
 
 import com.demo.develop.searchscrollapp.R;
 
@@ -13,17 +20,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
 
-public class Adapter extends ArrayAdapter<String> implements SectionIndexer{
+public class Adapter extends BaseAdapter implements SectionIndexer{
     private String myLog = "---------------------";
-    private String[] items;
+    private LinkedList<String> items;
     private Context context;
     private HashMap<String, Integer> alphaIndexer;
     private String[] sections;
 
     public Adapter(Context context, LinkedList<String> items) {
-        super(context, R.layout.list_item, items);
         this.context = context;
         alphaIndexer = new HashMap<String, Integer>();
+        this.items = items;
         int size = items.size();
 
         for (int x = 0; x < size; x++){
@@ -56,39 +63,32 @@ public class Adapter extends ArrayAdapter<String> implements SectionIndexer{
         return 0;
     }
 
-//    @Override
-//    public int getCount() {
-//        return items.length;
-//    }
-//
-//    @Override
-//    public Object getItem(int position) {
-//        return items[position];
-//    }
-//
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
-//
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        Log.e(myLog, "" + position);
-//
-//        LinearLayout ll = new LinearLayout(context);
-//        ll.setOrientation(LinearLayout.VERTICAL);
-//        ll.setBackgroundColor(Color.RED);
-//
-//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//
-//        TextView tv = new TextView(context);
-//        tv.setText(items[position]);
-//
-//        Log.e(myLog, items[position]);
-//
-//        ll.addView(tv,layoutParams);
-//        return ll;
-//    }
+    @Override
+    public int getCount() {
+        return items.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return items.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        LinearLayout ll = new LinearLayout(context);
+        ll.setOrientation(LinearLayout.VERTICAL);
+
+        TextView tv = new TextView(context);
+        tv.setText(items.get(position));
+
+        ll.addView(tv);
+        return ll;
+    }
 
 }
