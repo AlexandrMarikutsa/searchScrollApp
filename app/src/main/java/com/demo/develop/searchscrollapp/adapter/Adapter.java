@@ -2,64 +2,93 @@ package com.demo.develop.searchscrollapp.adapter;
 
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.SectionIndexer;
 
 import com.demo.develop.searchscrollapp.R;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Set;
 
-public class Adapter extends BaseAdapter {
-    private List<String> strings;
-    private LayoutInflater layoutInflater;
+public class Adapter extends ArrayAdapter<String> implements SectionIndexer{
+    private String myLog = "---------------------";
+    private String[] items;
     private Context context;
+    private HashMap<String, Integer> alphaIndexer;
+    private String[] sections;
 
-    public Adapter(Context context, List<String> strings) {
-        this.strings = strings;
+    public Adapter(Context context, LinkedList<String> items) {
+        super(context, R.layout.list_item, items);
         this.context = context;
-        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
+        alphaIndexer = new HashMap<String, Integer>();
+        int size = items.size();
 
-    static class ViewHolder {
-        TextView stringName;
-    }
-
-    @Override
-    public int getCount() {
-        return strings.size();
-    }
-
-    @Override
-    public String getItem(int position) {
-        return strings.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
-        if(convertView == null){
-
-            convertView = layoutInflater.inflate(R.layout.mylist,parent,false);
-
-            viewHolder = new ViewHolder();
-            viewHolder.stringName = (TextView) convertView.findViewById(R.id.name);
-             convertView.setTag(viewHolder);
-        }else {
-            viewHolder = (ViewHolder) convertView.getTag();
+        for (int x = 0; x < size; x++){
+            String s = items.get(x);
+            String ch = s.substring(0, 1);
+            ch = ch.toUpperCase();
+            if(!alphaIndexer.containsKey(ch)){
+                alphaIndexer.put(ch, x);
+            }
         }
-
-        String string =  getItem(position);
-
-        viewHolder.stringName.setText(string);
-         return convertView;
+        Set<String> sectionLetters = alphaIndexer.keySet();
+        ArrayList<String> sectionList = new ArrayList<String>(sectionLetters);
+        Collections.sort(sectionList);
+        sections = new String[sectionList.size()];
+        sectionList.toArray(sections);
     }
+
+    @Override
+    public Object[] getSections() {
+        return sections;
+    }
+
+    @Override
+    public int getPositionForSection(int section) {
+        return alphaIndexer.get(sections[section]);
+    }
+
+    @Override
+    public int getSectionForPosition(int position) {
+        return 0;
+    }
+
+//    @Override
+//    public int getCount() {
+//        return items.length;
+//    }
+//
+//    @Override
+//    public Object getItem(int position) {
+//        return items[position];
+//    }
+//
+//    @Override
+//    public long getItemId(int position) {
+//        return position;
+//    }
+//
+//    @Override
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//        Log.e(myLog, "" + position);
+//
+//        LinearLayout ll = new LinearLayout(context);
+//        ll.setOrientation(LinearLayout.VERTICAL);
+//        ll.setBackgroundColor(Color.RED);
+//
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//
+//        TextView tv = new TextView(context);
+//        tv.setText(items[position]);
+//
+//        Log.e(myLog, items[position]);
+//
+//        ll.addView(tv,layoutParams);
+//        return ll;
+//    }
 
 }
