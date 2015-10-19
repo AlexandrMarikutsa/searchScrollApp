@@ -61,6 +61,7 @@ public class MySectionIndexer extends LinearLayout {
         sectionList.toArray(sections);
         for(String s: sectionList){
             TextView textView = new TextView(context);
+            textView.setHeight(60);
             textView.setText(s);
             addView(textView);
         }
