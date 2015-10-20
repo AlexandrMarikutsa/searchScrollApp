@@ -20,6 +20,7 @@ public class MyAdapter extends ArrayAdapter<String> implements SectionIndexer {
     private String[] strings = ArrayOfStrings.STRINGS;
     private List<String> items ;
     private HashMap<String, Integer> alphaIndexer;
+    private String[]sections;
 
     public MyAdapter(Context context, int textViewResourceId, List<String> objects) {
         super(context, textViewResourceId, objects);
@@ -38,12 +39,12 @@ public class MyAdapter extends ArrayAdapter<String> implements SectionIndexer {
         Set<String> sectionLetters = alphaIndexer.keySet();
         ArrayList<String> sectionList = new ArrayList<String>(sectionLetters);
         Collections.sort(sectionList);
-        String[]sections = new String[sectionList.size()];
+        sections = new String[sectionList.size()];
         sectionList.toArray(sections);
     }
 
     public Object[] getSections() {
-        return Alphavit.getAlphaLetters(items);
+        return sections;
     }
 
     public int getPositionForSection(int i) {
