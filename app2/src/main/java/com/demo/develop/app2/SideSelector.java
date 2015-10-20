@@ -49,7 +49,7 @@ public class SideSelector extends View {
         setBackgroundColor(0x44FFFFFF);
         paint = new Paint();
         paint.setColor(0xFFA6A9AA);
-        paint.setTextSize(20);
+        paint.setTextSize(30);
         paint.setTextAlign(Paint.Align.CENTER);
     }
 
@@ -92,20 +92,22 @@ public class SideSelector extends View {
     protected void onDraw(Canvas canvas) {
         sectionsOnSelector = new ArrayList<>();
         int viewHeight = getPaddedHeight();
-        charHeight = ((float) viewHeight) / 30;
+//        charHeight = ((float) viewHeight) / sections.length;
         float widthCenter = getMeasuredWidth() / 2;
-
+        charHeight = 30;
+        if(viewHeight < charHeight*sections.length)
+            Log.e("||||___||||", "jdjdjdj");
         for(int i = 0; i < 4; i++) {
-            canvas.drawText(String.valueOf(sections[i]), widthCenter, (i+1)*charHeight + charHeight, paint);
-            section = new Section(i, (int) ((i+1)*charHeight));
+            canvas.drawText(String.valueOf(sections[i]), widthCenter, i*charHeight + charHeight, paint);
+            section = new Section(i, (int) (i*charHeight));
             sectionsOnSelector.add(section);
         }
-        canvas.drawText(String.valueOf("*"), widthCenter, 5*charHeight + (charHeight), paint);
-        canvas.drawText(String.valueOf("*"), widthCenter, charHeight + (6 * charHeight), paint);
+        canvas.drawText(String.valueOf("*"), widthCenter, viewHeight/2, paint);
+        canvas.drawText(String.valueOf("*"), widthCenter, viewHeight/2 + charHeight , paint);
 
         for(int i = 0; i < 4; i++) {
-            canvas.drawText(String.valueOf(sections[(sections.length - 1) - i]), widthCenter, ((sections.length - 1) - i)*charHeight +charHeight, paint);
-            section = new Section((sections.length - 1) - i, (int)(((sections.length - 1) - i)*charHeight));
+            canvas.drawText(String.valueOf(sections[(sections.length - 1) - i]), widthCenter, (viewHeight - (i*charHeight)), paint);
+            section = new Section((sections.length - 1) - i, (int)(viewHeight - ((i+1)*charHeight)));
             sectionsOnSelector.add(section);
         }
 //        canvas.drawText(String.valueOf(sections[sections.length - 1]), widthCenter, charHeight + (3 * charHeight), paint);
