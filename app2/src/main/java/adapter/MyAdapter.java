@@ -48,9 +48,8 @@ public class MyAdapter extends ArrayAdapter<String> implements SectionIndexer {
     }
 
     public int getPositionForSection(int i) {
-
         Log.d("-------", "getPositionForSection " + i);
-        return (int) (getCount() * ((float)i/(float)getSections().length));
+        return alphaIndexer.get(sections[i]);
     }
 
     public int getSectionForPosition(int i) {
