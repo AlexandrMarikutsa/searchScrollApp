@@ -50,10 +50,12 @@ public class MyAdapter extends ArrayAdapter<String> implements SectionIndexer {
     public int getPositionForSection(int i) {
         Log.d("-------", "getPositionForSection " + i);
         return alphaIndexer.get(sections[i]);
+//        alphaIndexer.getPositionForSection(section)
     }
 
     public int getSectionForPosition(int i) {
         return 0;
+//        return alphaIndexer.get(position);
     }
 
     private void arrayToList(){

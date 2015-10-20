@@ -23,6 +23,11 @@ public class Main extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        try {
+//            Thread.sleep(8000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         setContentView(R.layout.activity_main);
 
         ListView listView = (ListView) findViewById(R.id.list_view);
@@ -36,6 +41,7 @@ public class Main extends Activity {
         listView.setAdapter(new MyAdapter(this, android.R.layout.simple_list_item_1, items));
 
         SideSelector sideSelector = (SideSelector) findViewById(R.id.side_selector);
+//        sideSelector.setListView(Alphavit.getAlphaLetters(ArrayOfStrings.STRINGS));
         sideSelector.setListView(listView);
     }
 }
