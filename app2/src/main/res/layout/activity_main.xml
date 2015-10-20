@@ -8,7 +8,7 @@
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:layout_toLeftOf="@+id/side_selector" />
 
     <com.demo.develop.app2.SideSelector
         android:id="@+id/side_selector"

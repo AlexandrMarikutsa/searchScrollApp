@@ -9,11 +9,13 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
 
+import constants.ArrayOfStrings;
+import service.Alphavit;
+
 public class SideSelector extends View {
     private static String TAG = SideSelector.class.getCanonicalName();
 
-    public static char[] ALPHABET = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+    public static String[] alphabet;
     public static final int BOTTOM_PADDING = 10;
 
     private SectionIndexer selectionIndexer = null;
@@ -42,6 +44,8 @@ public class SideSelector extends View {
         paint.setColor(0xFFA6A9AA);
         paint.setTextSize(20);
         paint.setTextAlign(Paint.Align.CENTER);
+        alphabet = ArrayOfStrings.STRINGS;
+        alphabet = Alphavit.getAlphaLetters(alphabet);
     }
 
     public void setListView(ListView _list) {
@@ -59,7 +63,7 @@ public class SideSelector extends View {
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
         int y = (int) event.getY();
-        float selectedIndex = ((float) y / (float) getPaddedHeight()) * ALPHABET.length;
+        float selectedIndex = ((float) y / (float) getPaddedHeight()) * alphabet.length;
 
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
             if (selectionIndexer == null) {

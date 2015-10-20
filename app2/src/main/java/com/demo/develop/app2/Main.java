@@ -12,8 +12,12 @@ import android.widget.SectionIndexer;
 import java.util.ArrayList;
 import java.util.List;
 
+import constants.ArrayOfStrings;
+import service.Alphavit;
+
 public class Main extends Activity {
 
+    List<String> items;
     public static final String TAG = Main.class.getCanonicalName();
 
     @Override
@@ -23,12 +27,10 @@ public class Main extends Activity {
 
         ListView listView = (ListView) findViewById(R.id.list_view);
 
-        List<String> items = new ArrayList<String>();
+        items = new ArrayList<String>();
 
-        for (char ch : SideSelector.ALPHABET) {
-            for (int i = 1; i <= 50; i++) {
-                items.add(String.valueOf(ch) + "-" + i);
-            }
+        for (String ch : ArrayOfStrings.STRINGS) {
+                items.add(ch);
         }
 
         listView.setAdapter(new IndexingArrayAdapter(this, android.R.layout.simple_list_item_1, items));
@@ -44,12 +46,7 @@ public class Main extends Activity {
         }
 
         public Object[] getSections() {
-            String[] chars = new String[SideSelector.ALPHABET.length];
-            for (int i = 0; i < SideSelector.ALPHABET.length; i++) {
-                chars[i] = String.valueOf(SideSelector.ALPHABET[i]);
-            }
-
-            return chars;
+            return Alphavit.getAlphaLetters(items);
         }
 
         public int getPositionForSection(int i) {

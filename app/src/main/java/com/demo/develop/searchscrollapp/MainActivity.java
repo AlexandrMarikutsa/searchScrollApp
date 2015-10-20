@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.demo.develop.searchscrollapp.adapter.Adapter;
+import com.demo.develop.searchscrollapp.adapter.MyAdapter;
 import com.demo.develop.searchscrollapp.constants.ArrayOfStrings;
 import com.demo.develop.searchscrollapp.customViews.MySectionIndexer;
 
@@ -36,11 +37,14 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
 
-        LinkedList<String> items = new LinkedList<>();
+        List<String> items = new ArrayList<>();
         for(String s: ArrayOfStrings.STRINGS) {
             items.add(s);
         }
         ListView listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(new Adapter(MainActivity.this,items));
+        listView.setAdapter(new Adapter(this, android.R.layout.simple_list_item_1, items));
+//        listView.setAdapter(new Adapter(MainActivity.this,items));
+        MySectionIndexer mySectionIndexer = (MySectionIndexer) findViewById(R.id.customIndexer);
+        mySectionIndexer.setListView(listView);
     }
 }

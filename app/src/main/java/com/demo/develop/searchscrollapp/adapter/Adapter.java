@@ -18,19 +18,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
-public class Adapter extends BaseAdapter implements SectionIndexer{
+public class Adapter extends ArrayAdapter<String> implements SectionIndexer{
     private String myLog = "---------------------";
-    private LinkedList<String> items;
+    private List<String> items;
     private Context context;
     private HashMap<String, Integer> alphaIndexer;
     private String[] sections;
 
-    public Adapter(Context context, LinkedList<String> items) {
+    public Adapter(Context context, int textViewResourceId, List<String> objects) {
+        super(context, textViewResourceId, objects);
         this.context = context;
         alphaIndexer = new HashMap<String, Integer>();
-        this.items = items;
+        this.items = objects;
         int size = items.size();
 
         for (int x = 0; x < size; x++){
@@ -55,40 +57,12 @@ public class Adapter extends BaseAdapter implements SectionIndexer{
 
     @Override
     public int getPositionForSection(int section) {
-        return alphaIndexer.get(sections[section]);
+        return (int) (getCount() * ((float)section/(float)getSections().length));
+//        return alphaIndexer.get(sections[section]);
     }
 
     @Override
     public int getSectionForPosition(int position) {
         return 0;
     }
-
-    @Override
-    public int getCount() {
-        return items.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return items.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        LinearLayout ll = new LinearLayout(context);
-        ll.setOrientation(LinearLayout.VERTICAL);
-
-        TextView tv = new TextView(context);
-        tv.setText(items.get(position));
-
-        ll.addView(tv);
-        return ll;
-    }
-
 }
