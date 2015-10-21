@@ -17,17 +17,16 @@ import listeners.OnCustomEventListener;
 
 public class SideSelector extends View {
 
-//    public static String[] alphabet;
     public static final int BOTTOM_PADDING = 10;
 
     private OnCustomEventListener listener;
     private List<Section> sectionsOnSelector;
     private Section section;
     private float charHeight;
-//    private SectionIndexer selectionIndexer = null;
-//    private ListView list;
     private Paint paint;
     private Character[] sections;
+    private int upLetter = 0;
+    private int downLetter = 0;
 
     public SideSelector(Context context) {
         super(context);
@@ -51,17 +50,6 @@ public class SideSelector extends View {
         paint.setTextSize(30);
         paint.setTextAlign(Paint.Align.CENTER);
     }
-
-//    public void setListView(ListView _list) {
-//        list = _list;
-//        selectionIndexer = (SectionIndexer) _list.getAdapter();
-//
-//        Object[] sectionsArr = selectionIndexer.getSections();
-//        sections = new String[sectionsArr.length];
-//        for (int i = 0; i < sectionsArr.length; i++) {
-//            sections[i] = sectionsArr[i].toString();
-//        }
-//    }
     public void setListLetters(Set<Character> sectionsSet) {
 
         Character[]sections = new Character[sectionsSet.size()];
@@ -75,26 +63,13 @@ public class SideSelector extends View {
         super.onTouchEvent(event);
         int y = (int) event.getY();
 
-        Log.e("-----", " " + y);
-
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
-//            if (selectionIndexer == null) {
-//                selectionIndexer = (SectionIndexer) list.getAdapter();
-//            }
             for (Section s: sectionsOnSelector) {
                 if (y >= s.y && y <= (s.y+charHeight)) {
-                    Log.e("-----POSITION-----", "" + s.position);
-                    Log.e("-----LETTER-----", "" + s.name);
-
                     if(listener !=null){
                         listener.getChar(s.name);
                     }
-
-//                    int position = selectionIndexer.getPositionForSection(s.position);
-//                    if (position == -1) {
-//                        return true;
-//                    }
-//                    list.setSelection(position);
+                    changeSelectorView(s.position);
                 }
             }
         }
@@ -106,13 +81,17 @@ public class SideSelector extends View {
         int viewHeight = getPaddedHeight();
         float widthCenter = getMeasuredWidth() / 2;
         charHeight = 30;
+//        int maxSections = (int) (viewHeight/charHeight);
+
         if(viewHeight <= charHeight*sections.length) {
             int numSections = (int) ((viewHeight/2 - charHeight)/charHeight);
 
-            for (int i = 0; i < numSections; i++) {
-                canvas.drawText(String.valueOf(sections[i]), widthCenter, i * charHeight + charHeight, paint);
-                section = new Section(sections[i],i, (int) (i * charHeight));
-                sectionsOnSelector.add(section);
+            if((numSections+upLetter) < (sections.length - numSections)) {
+                for (int i = 0 + upLetter; i < numSections + upLetter; i++) {
+                    canvas.drawText(String.valueOf(sections[i]), widthCenter, (i - upLetter) * charHeight + charHeight, paint);
+                    section = new Section(sections[i], i, (int) ((i - upLetter) * charHeight));
+                    sectionsOnSelector.add(section);
+                }
             }
             canvas.drawText(String.valueOf("*"), widthCenter, viewHeight / 2, paint);
             canvas.drawText(String.valueOf("*"), widthCenter, viewHeight / 2 + charHeight, paint);
@@ -130,6 +109,11 @@ public class SideSelector extends View {
             }
         }
         super.onDraw(canvas);
+    }
+
+    private void changeSelectorView(int position){
+        upLetter = position-1;
+        this.invalidate();
     }
 
     private int getPaddedHeight() {

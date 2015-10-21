@@ -28,7 +28,7 @@ public class Main extends Activity {
     private SectionIndexer sectionIndexer;
     private List<String> items;
     public static final String TAG = Main.class.getCanonicalName();
-    Map<Character, Integer> a;
+    Map<Character, Integer> alphaIndexer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,6 @@ public class Main extends Activity {
 //        }
         setContentView(R.layout.activity_main);
 
-//        initImageViewSize();
         listView = (ListView) findViewById(R.id.list_view);
         items = new ArrayList<String>();
 
@@ -52,12 +51,12 @@ public class Main extends Activity {
 
         SideSelector sideSelector = (SideSelector) findViewById(R.id.side_selector);
 
-        a = Alphavit.getAlphaLetters(ArrayOfStrings.STRINGS);
-        sideSelector.setListLetters(a.keySet());
+        alphaIndexer = Alphavit.getAlphaLetters(ArrayOfStrings.STRINGS);
+        sideSelector.setListLetters(alphaIndexer.keySet());
         sideSelector.setCustomEventListener(new OnCustomEventListener() {
             @Override
             public void getChar(Character letter) {
-                changeListView(a.get(letter));
+                changeListView(alphaIndexer.get(letter));
             }
         });
     }
