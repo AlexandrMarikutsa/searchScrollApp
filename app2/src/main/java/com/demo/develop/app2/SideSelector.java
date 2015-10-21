@@ -7,20 +7,18 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ListView;
-import android.widget.SectionIndexer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import constants.ArrayOfStrings;
-import service.Alphavit;
+import listeners.OnCustomEventListener;
 
 public class SideSelector extends View {
 
 //    public static String[] alphabet;
     public static final int BOTTOM_PADDING = 10;
 
+    private OnCustomEventListener listener;
     private List<Section> sectionsOnSelector;
     private Section section;
     private float charHeight;
@@ -66,7 +64,7 @@ public class SideSelector extends View {
         this.sections = sections;
     }
 
-
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
         int y = (int) event.getY();
@@ -81,6 +79,11 @@ public class SideSelector extends View {
                 if (y >= s.y && y <= (s.y+charHeight)) {
                     Log.e("-----POSITION-----", "" + s.position);
                     Log.e("-----LETTER-----", "" + s.name);
+
+                    if(listener !=null){
+                        listener.getChar(s.name);
+                    }
+
 //                    int position = selectionIndexer.getPositionForSection(s.position);
 //                    if (position == -1) {
 //                        return true;
@@ -137,5 +140,9 @@ public class SideSelector extends View {
             this.position = position;
             this.y = y;
         }
+    }
+
+    public void setCustomEventListener(OnCustomEventListener eventListener) {
+        listener = eventListener;
     }
 }

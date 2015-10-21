@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import adapter.MyAdapter;
 import constants.ArrayOfStrings;
+import listeners.OnCustomEventListener;
 import service.Alphavit;
 
 public class Main extends Activity {
@@ -43,8 +45,19 @@ public class Main extends Activity {
 
         listView.setAdapter(new MyAdapter(this, android.R.layout.simple_list_item_1, items));
 
+//        listView.setOnClickListener(new SideSelector. {
+
+//        });
+
         SideSelector sideSelector = (SideSelector) findViewById(R.id.side_selector);
         sideSelector.setListLetters(Alphavit.getAlphaLetters(ArrayOfStrings.STRINGS));
+        sideSelector.setCustomEventListener(new OnCustomEventListener() {
+            @Override
+            public void getChar(char letter) {
+                Log.e("555555", "" + letter);
+            }
+        });
 //        sideSelector.setListView(listView);
+
     }
 }
