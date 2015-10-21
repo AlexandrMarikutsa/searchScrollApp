@@ -14,7 +14,9 @@ import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import adapter.MyAdapter;
 import constants.ArrayOfStrings;
@@ -22,8 +24,11 @@ import listeners.OnCustomEventListener;
 import service.Alphavit;
 
 public class Main extends Activity {
+    private ListView listView;
+    private SectionIndexer sectionIndexer;
     private List<String> items;
     public static final String TAG = Main.class.getCanonicalName();
+    Map<Character, Integer> a;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +41,7 @@ public class Main extends Activity {
         setContentView(R.layout.activity_main);
 
 //        initImageViewSize();
-        ListView listView = (ListView) findViewById(R.id.list_view);
+        listView = (ListView) findViewById(R.id.list_view);
         items = new ArrayList<String>();
 
         for (String ch : ArrayOfStrings.STRINGS) {
@@ -45,19 +50,23 @@ public class Main extends Activity {
 
         listView.setAdapter(new MyAdapter(this, android.R.layout.simple_list_item_1, items));
 
-//        listView.setOnClickListener(new SideSelector. {
-
-//        });
-
         SideSelector sideSelector = (SideSelector) findViewById(R.id.side_selector);
-        sideSelector.setListLetters(Alphavit.getAlphaLetters(ArrayOfStrings.STRINGS));
+
+        a = Alphavit.getAlphaLetters(ArrayOfStrings.STRINGS);
+        sideSelector.setListLetters(a.keySet());
         sideSelector.setCustomEventListener(new OnCustomEventListener() {
             @Override
-            public void getChar(char letter) {
-                Log.e("555555", "" + letter);
+            public void getChar(Character letter) {
+                changeListView(a.get(letter));
             }
         });
-//        sideSelector.setListView(listView);
+    }
 
+    public void changeListView(int x){
+        if (sectionIndexer == null)
+            sectionIndexer = (SectionIndexer) listView.getAdapter();
+        int position = sectionIndexer.getPositionForSection(x);
+        if (position != -1)
+            listView.setSelection(position);
     }
 }

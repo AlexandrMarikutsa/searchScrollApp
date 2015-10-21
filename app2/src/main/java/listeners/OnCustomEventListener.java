@@ -2,5 +2,5 @@ package listeners;
 
 
 public interface OnCustomEventListener {
-    public void getChar(char letter);
+    public void getChar(Character letter);
 }

@@ -9,7 +9,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import listeners.OnCustomEventListener;
 
@@ -25,7 +27,7 @@ public class SideSelector extends View {
 //    private SectionIndexer selectionIndexer = null;
 //    private ListView list;
     private Paint paint;
-    private String[] sections;
+    private Character[] sections;
 
     public SideSelector(Context context) {
         super(context);
@@ -60,7 +62,11 @@ public class SideSelector extends View {
 //            sections[i] = sectionsArr[i].toString();
 //        }
 //    }
-    public void setListLetters(String[] sections) {
+    public void setListLetters(Set<Character> sectionsSet) {
+
+        Character[]sections = new Character[sectionsSet.size()];
+        sectionsSet.toArray(sections);
+        Arrays.sort(sections);
         this.sections = sections;
     }
 
@@ -105,7 +111,7 @@ public class SideSelector extends View {
 
             for (int i = 0; i < numSections; i++) {
                 canvas.drawText(String.valueOf(sections[i]), widthCenter, i * charHeight + charHeight, paint);
-                section = new Section(sections[i].charAt(0),i, (int) (i * charHeight));
+                section = new Section(sections[i],i, (int) (i * charHeight));
                 sectionsOnSelector.add(section);
             }
             canvas.drawText(String.valueOf("*"), widthCenter, viewHeight / 2, paint);
@@ -113,13 +119,13 @@ public class SideSelector extends View {
 
             for (int i = 0; i < numSections; i++) {
                 canvas.drawText(String.valueOf(sections[(sections.length - 1) - i]), widthCenter, (viewHeight - (i * charHeight)), paint);
-                section = new Section(sections[(sections.length - 1) - i].charAt(0),(sections.length - 1) - i, (int) (viewHeight - ((i + 1) * charHeight)));
+                section = new Section(sections[(sections.length - 1) - i],(sections.length - 1) - i, (int) (viewHeight - ((i + 1) * charHeight)));
                 sectionsOnSelector.add(section);
             }
         }else {
             for (int i = 0; i < sections.length; i++) {
                canvas.drawText(String.valueOf(sections[i]), widthCenter, charHeight + (i * charHeight), paint);
-                section = new Section(sections[i].charAt(0),i, (int) (i * charHeight));
+                section = new Section(sections[i],i, (int) (i * charHeight));
                 sectionsOnSelector.add(section);
             }
         }
@@ -131,11 +137,11 @@ public class SideSelector extends View {
     }
 
     public class Section {
-        private char name;
+        private Character name;
         private int position;
         private int y;
 
-        public Section(char name, int position, int y) {
+        public Section(Character name, int position, int y) {
             this.name = name;
             this.position = position;
             this.y = y;

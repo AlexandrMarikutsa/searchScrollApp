@@ -1,30 +1,29 @@
 package service;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Alphavit {
-    public final static String[] getAlphaLetters(String[] items) {
+    public final static Map<Character, Integer> getAlphaLetters(String[] items) {
         int size = items.length;
-        HashMap<String, Integer> alphaIndexer = new HashMap<>();
+        HashMap<Character, Integer> alphaIndexer = new HashMap<>();
+        Arrays.sort(items);
 
         for (int x = 0; x < size; x++) {
             String s = items[x];
-            String ch = s.substring(0, 1);
-            ch = ch.toUpperCase();
+            Character ch = s.charAt(0);
+            ch.toUpperCase(ch);
             if (!alphaIndexer.containsKey(ch)) {
                 alphaIndexer.put(ch, x);
             }
         }
-        Set<String> sectionLetters = alphaIndexer.keySet();
-        ArrayList<String> sectionList = new ArrayList<String>(sectionLetters);
-        Collections.sort(sectionList);
-        String[]sections = new String[sectionList.size()];
-        sectionList.toArray(sections);
-        return sections;
+        return alphaIndexer;
     }
 }
