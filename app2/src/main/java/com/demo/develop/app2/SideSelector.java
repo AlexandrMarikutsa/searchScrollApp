@@ -17,16 +17,15 @@ import constants.ArrayOfStrings;
 import service.Alphavit;
 
 public class SideSelector extends View {
-    private static String TAG = SideSelector.class.getCanonicalName();
 
-    public static String[] alphabet;
+//    public static String[] alphabet;
     public static final int BOTTOM_PADDING = 10;
 
     private List<Section> sectionsOnSelector;
     private Section section;
     private float charHeight;
-    private SectionIndexer selectionIndexer = null;
-    private ListView list;
+//    private SectionIndexer selectionIndexer = null;
+//    private ListView list;
     private Paint paint;
     private String[] sections;
 
@@ -53,17 +52,20 @@ public class SideSelector extends View {
         paint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void setListView(ListView _list) {
-        list = _list;
-        selectionIndexer = (SectionIndexer) _list.getAdapter();
-
-        Object[] sectionsArr = selectionIndexer.getSections();
-        sections = new String[sectionsArr.length];
-        for (int i = 0; i < sectionsArr.length; i++) {
-            sections[i] = sectionsArr[i].toString();
-        }
-
+//    public void setListView(ListView _list) {
+//        list = _list;
+//        selectionIndexer = (SectionIndexer) _list.getAdapter();
+//
+//        Object[] sectionsArr = selectionIndexer.getSections();
+//        sections = new String[sectionsArr.length];
+//        for (int i = 0; i < sectionsArr.length; i++) {
+//            sections[i] = sectionsArr[i].toString();
+//        }
+//    }
+    public void setListLetters(String[] sections) {
+        this.sections = sections;
     }
+
 
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
@@ -72,17 +74,18 @@ public class SideSelector extends View {
         Log.e("-----", " " + y);
 
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
-            if (selectionIndexer == null) {
-                selectionIndexer = (SectionIndexer) list.getAdapter();
-            }
+//            if (selectionIndexer == null) {
+//                selectionIndexer = (SectionIndexer) list.getAdapter();
+//            }
             for (Section s: sectionsOnSelector) {
                 if (y >= s.y && y <= (s.y+charHeight)) {
                     Log.e("-----POSITION-----", "" + s.position);
-                    int position = selectionIndexer.getPositionForSection(s.position);
-                    if (position == -1) {
-                        return true;
-                    }
-                    list.setSelection(position);
+                    Log.e("-----LETTER-----", "" + s.name);
+//                    int position = selectionIndexer.getPositionForSection(s.position);
+//                    if (position == -1) {
+//                        return true;
+//                    }
+//                    list.setSelection(position);
                 }
             }
         }
@@ -94,24 +97,26 @@ public class SideSelector extends View {
         int viewHeight = getPaddedHeight();
         float widthCenter = getMeasuredWidth() / 2;
         charHeight = 30;
-        if(viewHeight < charHeight*sections.length) {
-            for (int i = 0; i < 4; i++) {
+        if(viewHeight <= charHeight*sections.length) {
+            int numSections = (int) ((viewHeight/2 - charHeight)/charHeight);
+
+            for (int i = 0; i < numSections; i++) {
                 canvas.drawText(String.valueOf(sections[i]), widthCenter, i * charHeight + charHeight, paint);
-                section = new Section(i, (int) (i * charHeight));
+                section = new Section(sections[i].charAt(0),i, (int) (i * charHeight));
                 sectionsOnSelector.add(section);
             }
             canvas.drawText(String.valueOf("*"), widthCenter, viewHeight / 2, paint);
             canvas.drawText(String.valueOf("*"), widthCenter, viewHeight / 2 + charHeight, paint);
 
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < numSections; i++) {
                 canvas.drawText(String.valueOf(sections[(sections.length - 1) - i]), widthCenter, (viewHeight - (i * charHeight)), paint);
-                section = new Section((sections.length - 1) - i, (int) (viewHeight - ((i + 1) * charHeight)));
+                section = new Section(sections[(sections.length - 1) - i].charAt(0),(sections.length - 1) - i, (int) (viewHeight - ((i + 1) * charHeight)));
                 sectionsOnSelector.add(section);
             }
         }else {
             for (int i = 0; i < sections.length; i++) {
                canvas.drawText(String.valueOf(sections[i]), widthCenter, charHeight + (i * charHeight), paint);
-                section = new Section(i, (int) (i * charHeight));
+                section = new Section(sections[i].charAt(0),i, (int) (i * charHeight));
                 sectionsOnSelector.add(section);
             }
         }
@@ -123,10 +128,12 @@ public class SideSelector extends View {
     }
 
     public class Section {
-        public int position;
-        public int y;
+        private char name;
+        private int position;
+        private int y;
 
-        public Section(int position, int y) {
+        public Section(char name, int position, int y) {
+            this.name = name;
             this.position = position;
             this.y = y;
         }
