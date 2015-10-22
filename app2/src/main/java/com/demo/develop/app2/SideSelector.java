@@ -36,6 +36,8 @@ public class SideSelector extends View {
     private float widthCenter;
     private int radius = 3;
     private int textSize = PaintParams.MIN_TEXT_SIZE;
+    private int upPoint;
+    private int downPoint;
 
     public SideSelector(Context context) {
         super(context);
@@ -115,30 +117,43 @@ public class SideSelector extends View {
         if(viewHeight <= charHeight*sections.length) {
             int numSections = (int) ((viewHeight/2 - radius*2)/charHeight);
 
-//            if (((viewHeight/2 - radius*2)- (numSections+upLetter)*charHeight >= charHeight){
-//                numSections = numSections +1;
-//            }
-//            if((numSections+upLetter) < (sections.length - numSections)) {
-                for (int i = 0 + upLetter; i < numSections + upLetter; i++) {
-                    section = new Section(sections[i], i, (int) ((i - upLetter) * charHeight));
-                    if(section.position != pressedSection) {
-                        canvas.drawText(String.valueOf(sections[i]), widthCenter, (i - upLetter) * charHeight + charHeight, paint);
-                    }else {
-                        canvas.drawText(String.valueOf(sections[i]), widthCenter, (i - upLetter) * charHeight + charHeight, paintCurrentLetter);
-                    }
-                    sectionsOnSelector.add(section);
+            section = new Section(sections[0], 0, 0);
+            if(section.position != pressedSection) {
+                canvas.drawText(String.valueOf(sections[0]), widthCenter, charHeight, paint);
+            }else {
+                canvas.drawText(String.valueOf(sections[0]), widthCenter, charHeight, paintCurrentLetter);
+            }
+            sectionsOnSelector.add(section);
+            if(upLetter < 0){
+                upLetter = 0;
+            }
+            if(pressedSection == (numSections - 1)){
+                upPoint = (int) (3*charHeight/2);
+                Log.e("upPoint  ", ""+upPoint);
+                downPoint = (int) (getHeight() - 3*charHeight/2);
+                Log.e("downpoint  ",""+downPoint);
+                numSections = (int) ((getHeight() - 2*charHeight - 2*radius)/ charHeight);
+                Log.e("num sections  ",""+numSections);
+                Log.e("charHeight  ",""+charHeight);
+                Log.e("height   ",""+getHeight());
+                Log.e("radius  ",""+radius);
+            }else {
+                upLetter = 0;
+                upPoint = getHeight() / 2 - 4*radius;
+                downPoint = getHeight() / 2 + 2*radius;
+            }
+
+            for (int i = 1 + upLetter; i < numSections + upLetter; i++) {
+                section = new Section(sections[i], i, (int) ((i - upLetter) * charHeight));
+                if(section.position != pressedSection) {
+                    canvas.drawText(String.valueOf(sections[i]), widthCenter, (i - upLetter) * charHeight + charHeight, paint);
+                }else {
+                    canvas.drawText(String.valueOf(sections[i]), widthCenter, (i - upLetter) * charHeight + charHeight, paintCurrentLetter);
                 }
-//                if((numSections+upLetter) < (21)) {
-//                canvas.drawCircle(widthCenter, viewHeight / 2 - 3*radius, radius, paintPoint);
-//                    canvas.drawText(String.valueOf("---"), widthCenter, height / 2, paint);
-//                    canvas.drawText(String.valueOf("-+-+-"), widthCenter, viewHeight / 2, paint);
-                canvas.drawCircle(widthCenter, getHeight() / 2 - 2*radius, radius, paintPoint);
-                canvas.drawCircle(widthCenter, getHeight() / 2 + 2*radius, radius, paintPoint);
-//                    canvas.drawCircle(widthCenter, viewHeight / 2 + 2*charHeight/3, 3, paintPoint);
-//                }else {
-//                    canvas.drawText(String.valueOf("9"), widthCenter, viewHeight / 2, paint);
-//                    canvas.drawText(String.valueOf("9"), widthCenter, viewHeight / 2 + charHeight, paint);
-//            }
+                sectionsOnSelector.add(section);
+            }
+            canvas.drawCircle(widthCenter, upPoint, radius, paintPoint);
+            canvas.drawCircle(widthCenter, downPoint, radius, paintPoint);
             for (int i = 0; i < numSections; i++) {
                 section = new Section(sections[(sections.length - 1) - i],(sections.length - 1) - i, (int) (viewHeight - ((i + 1) * charHeight)));
                 if(section.position != pressedSection) {
@@ -164,6 +179,7 @@ public class SideSelector extends View {
     }
 
     private void changeSelectorView(int position){
+//        upLetter = position-1;
         upLetter = position-1;
         this.invalidate();
     }
