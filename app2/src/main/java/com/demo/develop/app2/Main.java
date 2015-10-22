@@ -59,6 +59,15 @@ public class Main extends Activity {
                 changeListView(alphaIndexer.get(letter));
             }
         });
+
+        SideSelector sideSelector2 = (SideSelector) findViewById(R.id.side_selector2);
+        sideSelector2.setListLetters(alphaIndexer.keySet());
+        sideSelector2.setCustomEventListener(new OnCustomEventListener() {
+            @Override
+            public void getChar(Character letter) {
+                changeListView(alphaIndexer.get(letter));
+            }
+        });
     }
 
     public void changeListView(int x){
