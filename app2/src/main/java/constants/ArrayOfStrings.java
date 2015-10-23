@@ -53,7 +53,7 @@ public class ArrayOfStrings {
             "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand",
             "The Bahamas", "The Gambia", "Togo", "Tokelau", "Tonga",
             "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan",
-            "Turks and Caicos Islands", "Tuvalu", "Virgin Islands", "Uganda",
+            "Turks and Caicos Islands", "Tuvalu","Uganda",
             "Ukraine", "United Arab Emirates", "United Kingdom",
             "United States", "United States Minor Outlying Islands", "Uruguay",
             "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam",
