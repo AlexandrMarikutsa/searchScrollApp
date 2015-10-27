@@ -30,19 +30,20 @@ public class SideSelector extends View {
     private OnCustomEventListener listener;
     private List<Section> sectionsOnSelector;
     private Section section;
+    private Section currentSection;
     private int pressedSection = 0;
     private float charHeight;
     private Paint paint;
     private Paint paintPoint;
     private Paint paintCurrentLetter;
     private Character[] sections;
-    private int upLetter = 0;
-    private int downLetter = 0;
     private float widthCenter;
     private int radius = 3;
     private int textSize = PaintParams.MIN_TEXT_SIZE;
     private int upPoint;
     private int downPoint;
+    private int downSections;
+    private int upSections;
 
     public SideSelector(Context context) {
         super(context);
@@ -93,6 +94,7 @@ public class SideSelector extends View {
                     if(listener !=null){
                         listener.getChar(s.name);
                         pressedSection = s.position;
+                        currentSection = s;
                     }
                     changeSelectorView(s.position);
                 }
@@ -108,11 +110,6 @@ public class SideSelector extends View {
         widthCenter = getMeasuredWidth() / 2;
         if (getWidth()/2 > textSize){
             textSize = viewHeight/7;
-//                if(viewHeight/7 >= PaintParams.MAX_TEXT_SIZE){
-//                    textSize = PaintParams.MAX_TEXT_SIZE;
-//                }else {
-//                    textSize = viewHeight/(getWidth()/2);
-//                }
         }
         init();
         charHeight = paint.getTextSize();
@@ -137,46 +134,35 @@ public class SideSelector extends View {
             int numSections = (int) ((upPoint - radius - sectionFirst.y)/charHeight);
             int charHeightForThisSections = (upPoint - radius - sectionFirst.y)/numSections;
 
-            /*якщо натиснуто на останню букву перед крапкою, то змінюємо вигляд і
-            * розміщення букв та крапок*/
-            if((pressedSection >= (numSections - 1)) && (pressedSection <= sections.length - numSections)){
-                /*встановлюємо координати для крапок*/
-                upPoint = sectionFirst.y + 2 * radius;
-                downPoint = (int) (sectionLast.y - charHeight);
-                /*малюємо крапки*/
-                drawPoint(canvas, upPoint);
-                drawPoint(canvas, downPoint);
-
-                /*Знаходимо відстань між верхньою та нижньою крапками*/
-                middleHeight = downPoint - 2 * radius - upPoint;
-
-                /*вираховуємо кількість секцій від верхньої крапки до нижньої*/
-                int numSectionsCentral = (int) (middleHeight/charHeight);
-                charHeightForThisSections = middleHeight/numSectionsCentral;
-
-                /*малюєм букви від верхньої крапки до нижньої крапки*/
-                /*Якщо натиснено на букву над верхньою крапкою*/
-                int letterNearPoint = 0;
-                if(pressedSection == (numSections - 1)){
-                    letterNearPoint = numSections-2;
-                }
-                    /*Якщо натиснено на букву над нижньою крапкою*/
-                if (pressedSection == (sections.length - numSections)) {
-                    letterNearPoint = sections.length - 2 - numSectionsCentral;
-                }
-                /*for down buttons*/
-                if(pressedSection < (sections.length - numSections) && pressedSection > (numSections - 1)){
-                    letterNearPoint = sections.length - 2 - numSectionsCentral;
-                }
-
-                if(pressedSection <= sections.length - numSections - numSectionsCentral + 3  && pressedSection > numSections -1){
-                    letterNearPoint = sections.length - 3 - numSectionsCentral;
-                }
-                for (int i = 0; i < numSectionsCentral; i++) {
-                    section = new Section(sections[i + letterNearPoint], i+letterNearPoint, (upPoint + charHeightForThisSections + i * charHeightForThisSections));
+            /*якщо натиснуто на передостанню букву перед крапкою знизу, то змінюємо вигляд і
+            * розміщення крапок та букв знизу*/
+            if((pressedSection < (sections.length - numSections + 1)) && (pressedSection >= numSections)){
+                downSections = sections.length + 1  - currentSection.position;
+                 /* розміщення букв знизу*/
+                for (int i = 0; i < downSections -1; i++) {
+                    section = new Section(sections[pressedSection + i - 1], pressedSection + i - 1, (currentSection.y - 1 * charHeightForThisSections + i * charHeightForThisSections));
                     drawSection(canvas, section);
                     sectionsOnSelector.add(section);
                 }
+                int downPointY = sectionsOnSelector.get(sectionsOnSelector.size()-1).y;
+                /* розміщення букв зверху*/
+                upSections = numSections - (downSections - numSections);
+                for (int i = 1; i < upSections; i++) {
+                    section = new Section(sections[i], i, (sectionFirst.y + i * charHeightForThisSections));
+                    drawSection(canvas, section);
+                    sectionsOnSelector.add(section);
+                }
+
+                /*Знаходимо відстань між першою та останньою буквами*/
+                middleHeight = sectionsOnSelector.get(2).y - charHeightForThisSections - (int) ((upSections)* charHeight);
+
+               /*change координати для крапок*/
+                upPoint = middleHeight/2 + (int) ((upSections)* charHeight) - radius;
+                downPoint = middleHeight/2 + (int) ((upSections)* charHeight) + 3 * radius;
+
+                /*малюємо крапки*/
+                drawPoint(canvas, upPoint);
+                drawPoint(canvas, downPoint);
             }else {
                 /*малюємо крапки*/
                 drawPoint(canvas, upPoint);
@@ -215,7 +201,6 @@ public class SideSelector extends View {
     }
 
     private void changeSelectorView(int position){
-        upLetter = position-1;
         this.invalidate();
     }
 
