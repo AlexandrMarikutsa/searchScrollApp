@@ -107,11 +107,12 @@ public class SideSelector extends View {
         int middleHeight;
         widthCenter = getMeasuredWidth() / 2;
         if (getWidth()/2 > textSize){
-                if(viewHeight/7 >= PaintParams.MAX_TEXT_SIZE){
-                    textSize = PaintParams.MAX_TEXT_SIZE;
-                }else {
-                    textSize = viewHeight/(getWidth()/2);
-                }
+            textSize = viewHeight/7;
+//                if(viewHeight/7 >= PaintParams.MAX_TEXT_SIZE){
+//                    textSize = PaintParams.MAX_TEXT_SIZE;
+//                }else {
+//                    textSize = viewHeight/(getWidth()/2);
+//                }
         }
         init();
         charHeight = paint.getTextSize();
@@ -155,21 +156,27 @@ public class SideSelector extends View {
 
                 /*малюєм букви від верхньої крапки до нижньої крапки*/
                 /*Якщо натиснено на букву над верхньою крапкою*/
-                int letterNearPoint;
-                if(pressedSection == (numSections - 1)) {
+                int letterNearPoint = 0;
+                if(pressedSection == (numSections - 1)){
                     letterNearPoint = numSections-2;
-                    for (int i = 1; i < numSectionsCentral; i++) {
-                        section = new Section(sections[i + letterNearPoint], i+letterNearPoint, (upPoint + i * charHeightForThisSections));
-                        drawSection(canvas, section);
-                        sectionsOnSelector.add(section);
-                    }
                 }
-//                int letterNearPoint = sections.length-2 - numSectionsCentral;
-//                for (int i = 1; i < numSectionsCentral; i++) {
-//                    section = new Section(sections[i + letterNearPoint], i + letterNearPoint, (upPoint + i * charHeightForThisSections));
-//                    drawSection(canvas, section);
-//                    sectionsOnSelector.add(section);
-//                }
+                    /*Якщо натиснено на букву над нижньою крапкою*/
+                if (pressedSection == (sections.length - numSections)) {
+                    letterNearPoint = sections.length - 2 - numSectionsCentral;
+                }
+                /*for down buttons*/
+                if(pressedSection < (sections.length - numSections) && pressedSection > (numSections - 1)){
+                    letterNearPoint = sections.length - 2 - numSectionsCentral;
+                }
+
+                if(pressedSection <= sections.length - numSections - numSectionsCentral + 3  && pressedSection > numSections -1){
+                    letterNearPoint = sections.length - 3 - numSectionsCentral;
+                }
+                for (int i = 0; i < numSectionsCentral; i++) {
+                    section = new Section(sections[i + letterNearPoint], i+letterNearPoint, (upPoint + charHeightForThisSections + i * charHeightForThisSections));
+                    drawSection(canvas, section);
+                    sectionsOnSelector.add(section);
+                }
             }else {
                 /*малюємо крапки*/
                 drawPoint(canvas, upPoint);
@@ -195,7 +202,7 @@ public class SideSelector extends View {
             /* Використовується, якщо поміщаються всі букви */
             for (int i = 0; i < sections.length; i++) {
                 section = new Section(sections[i], i, (int) (i * charHeight));
-                charHeight = viewHeight / sections.length;
+                charHeight = (viewHeight - BOTTOM)/ sections.length;
                 if (section.position != pressedSection) {
                     canvas.drawText(String.valueOf(sections[i]), widthCenter, charHeight + (i * charHeight), paint);
                 } else {
