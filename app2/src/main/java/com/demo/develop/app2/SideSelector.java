@@ -138,31 +138,50 @@ public class SideSelector extends View {
             * розміщення крапок та букв знизу*/
             if((pressedSection < (sections.length - numSections + 1)) && (pressedSection >= numSections)){
                 downSections = sections.length + 1  - currentSection.position;
-                 /* розміщення букв знизу*/
-                for (int i = 0; i < downSections -1; i++) {
-                    section = new Section(sections[pressedSection + i - 1], pressedSection + i - 1, (currentSection.y - 1 * charHeightForThisSections + i * charHeightForThisSections));
-                    drawSection(canvas, section);
-                    sectionsOnSelector.add(section);
-                }
-                int downPointY = sectionsOnSelector.get(sectionsOnSelector.size()-1).y;
-                /* розміщення букв зверху*/
                 upSections = numSections - (downSections - numSections);
-                for (int i = 1; i < upSections; i++) {
-                    section = new Section(sections[i], i, (sectionFirst.y + i * charHeightForThisSections));
-                    drawSection(canvas, section);
-                    sectionsOnSelector.add(section);
+                /*if size of upSections > 1*/
+                if(upSections > 1) {
+                 /* розміщення букв знизу*/
+                    for (int i = 0; i < downSections -1; i++) {
+                        section = new Section(sections[pressedSection + i - 1], pressedSection + i - 1, (currentSection.y - 1 * charHeightForThisSections + i * charHeightForThisSections));
+                        drawSection(canvas, section);
+                        sectionsOnSelector.add(section);
+                    }
+                /* розміщення букв зверху*/
+                    for (int i = 1; i < upSections; i++) {
+                        section = new Section(sections[i], i, (sectionFirst.y + i * charHeightForThisSections));
+                        drawSection(canvas, section);
+                        sectionsOnSelector.add(section);
+                    }
+
+                    /*Знаходимо відстань між першою та останньою буквами*/
+                    middleHeight = sectionsOnSelector.get(2).y - charHeightForThisSections - (int) ((upSections)* charHeight);
+
+                    /*change координати для крапок*/
+                    upPoint = middleHeight/2 + (int) ((upSections)* charHeight) - radius;
+                    downPoint = middleHeight/2 + (int) ((upSections)* charHeight) + 3 * radius;
+
+                    /*малюємо крапки*/
+                    drawPoint(canvas, upPoint);
+                    drawPoint(canvas, downPoint);
+                }else {
+                    /*if size of upSections <= 1*/
+                    /*change координати для крапок*/
+                    upPoint = sectionFirst.y + 3 *radius;
+                    downPoint = sectionLast.y - charHeightForThisSections - radius;
+
+                    /*малюємо крапки*/
+                    drawPoint(canvas, upPoint);
+                    drawPoint(canvas, downPoint);
+                    /*Знаходимо відстань між першою та останньою points*/
+                    middleHeight = (downPoint - radius) - (upPoint + radius);
+                    numSections = (int) (middleHeight/charHeight);
+//                    drawPoint(canvas, middleHeight/2 + upPoint + radius);
+                    for(int i = 1; i < numSections; i++){
+                        
+                    }
+
                 }
-
-                /*Знаходимо відстань між першою та останньою буквами*/
-                middleHeight = sectionsOnSelector.get(2).y - charHeightForThisSections - (int) ((upSections)* charHeight);
-
-               /*change координати для крапок*/
-                upPoint = middleHeight/2 + (int) ((upSections)* charHeight) - radius;
-                downPoint = middleHeight/2 + (int) ((upSections)* charHeight) + 3 * radius;
-
-                /*малюємо крапки*/
-                drawPoint(canvas, upPoint);
-                drawPoint(canvas, downPoint);
             }else {
                 /*малюємо крапки*/
                 drawPoint(canvas, upPoint);
