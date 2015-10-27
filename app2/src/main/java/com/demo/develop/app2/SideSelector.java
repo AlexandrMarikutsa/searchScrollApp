@@ -89,7 +89,7 @@ public class SideSelector extends View {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
             for (Section s: sectionsOnSelector) {
-                if (y >= s.y && y <= (s.y+charHeight)) {
+                if (y >= (s.y - charHeight) && y <= s.y) {
                     if(listener !=null){
                         listener.getChar(s.name);
                         pressedSection = s.position;
