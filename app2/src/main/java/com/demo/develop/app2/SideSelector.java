@@ -126,23 +126,23 @@ public class SideSelector extends View {
     }
 
     private void drawNotAllSections(Canvas canvas){
-        int numOfUpAndDownSec = (int) ((getHeight() - BOTTOM + charHeight) / charHeight);
+        int numOfUpAndDownSec = (int) ((getHeight() - BOTTOM + textSize) / textSize);
         if((numOfUpAndDownSec % 2) > 0){
             upSections = numOfUpAndDownSec/2;
             downSections = upSections;
             for(int i = 0; i < upSections; i++){
                 Section section = sectionsAll.get(i);
-                section.y = (int) (i * charHeight + charHeight);
+                section.y = i * textSize + textSize;
                 drawSection(canvas, section);
             }
-            upPoint = (int) ((upSections - 1) * charHeight + charHeight + charHeight/2 - radius);
-            downPoint = (int) (upPoint + charHeight/2);
+            upPoint = ((upSections - 1) * textSize + textSize + 2 * radius);
+            downPoint = (upPoint + 4 * radius);
             drawPoint(canvas, upPoint);
             drawPoint(canvas, downPoint);
 
             for(int i = 1; i < downSections + 1; i++){
                 Section section = sectionsAll.get(i + sectionsAll.size() - downSections - 1);
-                section.y = (int) (i * charHeight + downPoint);
+                section.y = i * textSize + downPoint;
                 drawSection(canvas, section);
             }
         }else {
@@ -201,10 +201,11 @@ public class SideSelector extends View {
         paintPoint.setColor(0xFFA6A9AA);
         paintPoint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         paintPoint.setTextAlign(Paint.Align.CENTER);
-        paintPoint.setTextSize(textSize/2);
+//        paintPoint.setTextSize(textSize/2);
     }
 
     public void drawPoint(Canvas canvas, int point){
+        radius = textSize/8;
         canvas.drawCircle(widthCenter, point, radius, paintPoint);
     }
 
