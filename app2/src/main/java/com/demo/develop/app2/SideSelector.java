@@ -47,14 +47,18 @@ public class SideSelector extends View {
 
     public SideSelector(Context context) {
         super(context);
+        setListLetters()
+        countNumberOfElements();
     }
 
     public SideSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
+        countNumberOfElements();
     }
 
     public SideSelector(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        countNumberOfElements();
     }
 
     private void init() {
@@ -95,6 +99,7 @@ public class SideSelector extends View {
                         listener.getChar(s.name);
                         pressedSection = s.position;
                         currentSection = s;
+
                     }
                     changeSelectorView(s.position);
                 }
@@ -103,123 +108,22 @@ public class SideSelector extends View {
         return true;
     }
 
-    protected void onDraw(Canvas canvas) {
-        sectionsOnSelector = new ArrayList<>();
-        int viewHeight = getHeight();
-        int middleHeight;
-        widthCenter = getMeasuredWidth() / 2;
+    private int countNumberOfElements(){
         if (getWidth()/2 > textSize){
-            textSize = viewHeight/7;
+            textSize = getHeight()/7;
         }
+        return getHeight()/textSize;
+    }
+
+    protected void onDraw(Canvas canvas) {
         init();
-        charHeight = paint.getTextSize();
+        super.onDraw(canvas);
+    }
 
-        if(viewHeight <= charHeight*sections.length) {/* Якщо НЕ поміщаються всі букви */
-            /* Створюєм першу та останню букву */
-            Section sectionFirst = new Section(sections[0], 0, (int) charHeight);
-            drawSection(canvas, sectionFirst);
-            Section sectionLast = new Section(sections[sections.length-1], sections.length-1, viewHeight - BOTTOM);
-            drawSection(canvas, sectionLast);
-            sectionsOnSelector.add(sectionFirst);
-            sectionsOnSelector.add(sectionLast);
-
-            /*Знаходимо відстань між першою та останньою буквами*/
-            middleHeight = (int) ((sectionLast.y - charHeight) - sectionFirst.y);
-
-            /*встановлюємо координати для крапок*/
-            upPoint = middleHeight / 2 + sectionFirst.y - 2 * radius;
-            downPoint = middleHeight / 2 + sectionFirst.y + 2 * radius;
-
-            /*вираховуємо кількість секцій від першої літери до крапки*/
-            int numSections = (int) ((upPoint - radius - sectionFirst.y)/charHeight);
-            int charHeightForThisSections = (upPoint - radius - sectionFirst.y)/numSections;
-
-            /*якщо натиснуто на передостанню букву перед крапкою знизу, то змінюємо вигляд і
-            * розміщення крапок та букв знизу*/
-            if((pressedSection < (sections.length - numSections + 1)) && (pressedSection >= numSections)){
-                downSections = sections.length + 1  - currentSection.position;
-                upSections = numSections - (downSections - numSections);
-                /*if size of upSections > 1*/
-                if(upSections > 1) {
-                 /* розміщення букв знизу*/
-                    for (int i = 0; i < downSections -1; i++) {
-                        section = new Section(sections[pressedSection + i - 1], pressedSection + i - 1, (currentSection.y - 1 * charHeightForThisSections + i * charHeightForThisSections));
-                        drawSection(canvas, section);
-                        sectionsOnSelector.add(section);
-                    }
-                /* розміщення букв зверху*/
-                    for (int i = 1; i < upSections; i++) {
-                        section = new Section(sections[i], i, (sectionFirst.y + i * charHeightForThisSections));
-                        drawSection(canvas, section);
-                        sectionsOnSelector.add(section);
-                    }
-
-                    /*Знаходимо відстань між першою та останньою буквами*/
-                    middleHeight = sectionsOnSelector.get(2).y - charHeightForThisSections - (int) ((upSections)* charHeight);
-
-                    /*change координати для крапок*/
-                    upPoint = middleHeight/2 + (int) ((upSections)* charHeight) - radius;
-                    downPoint = middleHeight/2 + (int) ((upSections)* charHeight) + 3 * radius;
-
-                    /*малюємо крапки*/
-                    drawPoint(canvas, upPoint);
-                    drawPoint(canvas, downPoint);
-                }else {
-                    /*if size of upSections <= 1*/
-                    /*change координати для крапок*/
-                    upPoint = sectionFirst.y + 3 *radius;
-                    downPoint = sectionLast.y - charHeightForThisSections - radius;
-
-                    /*малюємо крапки*/
-                    drawPoint(canvas, upPoint);
-                    drawPoint(canvas, downPoint);
-                    /*Знаходимо відстань між першою та останньою points*/
-                    middleHeight = (downPoint - radius) - (upPoint + radius);
-                    numSections = (int) (middleHeight/charHeight);
-//                    drawPoint(canvas, middleHeight/2 + upPoint + radius);
-
-                    /*find first letter after up point and draw to downpoint*/
-                        for(int i = 0; i < numSections; i++){
-                        section = new Section(sections[sections.length - downSections -2 + i], sections.length - downSections - 2 + i, (int)(upPoint + radius + i * charHeight + charHeight));
-                        drawSection(canvas, section);
-                        sectionsOnSelector.add(section);
-                    }
-
-                }
-            }else {
-                /*малюємо крапки*/
-                drawPoint(canvas, upPoint);
-                drawPoint(canvas, downPoint);
-
-                /*малюєм букви від другої букви до крапки*/
-                for (int i = 1; i < numSections; i++) {
-                    section = new Section(sections[i], i, (sectionFirst.y + i * charHeightForThisSections));
-                    drawSection(canvas, section);
-                    sectionsOnSelector.add(section);
-                }
-                /*малюєм букви від другої крапки до передостанньої букви*/
-                int j = 1;
-                for (int i = sections.length - numSections; i < sections.length - 1; i++) {
-                    j++;
-                    section = new Section(sections[i], i, (downPoint + radius + j * charHeightForThisSections));
-                    drawSection(canvas, section);
-                    sectionsOnSelector.add(section);
-                }
-            }
-            super.onDraw(canvas);
-        }else {
-            /* Використовується, якщо поміщаються всі букви */
-            for (int i = 0; i < sections.length; i++) {
-                section = new Section(sections[i], i, (int) (i * charHeight));
-                charHeight = (viewHeight - BOTTOM)/ sections.length;
-                if (section.position != pressedSection) {
-                    canvas.drawText(String.valueOf(sections[i]), widthCenter, charHeight + (i * charHeight), paint);
-                } else {
-                    canvas.drawText(String.valueOf(sections[i]), widthCenter, charHeight + (i * charHeight), paintCurrentLetter);
-                }
-                sectionsOnSelector.add(section);
-            }
-            super.onDraw(canvas);
+    private List<Section> getSectionList(){
+        List<Section> sections = new ArrayList<>();
+        for(int i = 1; i <= countNumberOfElements(); i++){
+            Section section = new Section(sections[i], i, )
         }
     }
 
@@ -231,6 +135,7 @@ public class SideSelector extends View {
         private Character name;
         private int position;
         private int y;
+        private boolean visible;
 
         public Section(Character name, int position, int y) {
             this.name = name;
@@ -241,17 +146,5 @@ public class SideSelector extends View {
 
     public void setCustomEventListener(OnCustomEventListener eventListener) {
         listener = eventListener;
-    }
-
-    public void drawSection(Canvas canvas, Section section){
-        if (section.position != pressedSection) {
-            canvas.drawText(String.valueOf(section.name), widthCenter, section.y, paint);
-        } else {
-            canvas.drawText(String.valueOf(section.name), widthCenter, section.y, paintCurrentLetter);
-        }
-    }
-
-    public void drawPoint(Canvas canvas, int point){
-        canvas.drawCircle(widthCenter, point, radius, paintPoint);
     }
 }
