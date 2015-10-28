@@ -47,14 +47,21 @@ public class SideSelector extends View {
 
     public SideSelector(Context context) {
         super(context);
+        initView();
     }
 
     public SideSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initView();
     }
 
     public SideSelector(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        initView();
+    }
+
+    private void initView() {
+
     }
 
     private void init() {
@@ -114,7 +121,8 @@ public class SideSelector extends View {
         init();
         charHeight = paint.getTextSize();
 
-        if(viewHeight <= charHeight*sections.length) {/* Якщо НЕ поміщаються всі букви */
+        if(viewHeight <= charHeight*sections.length) {
+            /* Якщо НЕ поміщаються всі букви */
             /* Створюєм першу та останню букву */
             Section sectionFirst = new Section(sections[0], 0, (int) charHeight);
             drawSection(canvas, sectionFirst);
@@ -141,13 +149,13 @@ public class SideSelector extends View {
                 upSections = numSections - (downSections - numSections);
                 /*if size of upSections > 1*/
                 if(upSections > 1) {
-                 /* розміщення букв знизу*/
+                    /* розміщення букв знизу*/
                     for (int i = 0; i < downSections -1; i++) {
                         section = new Section(sections[pressedSection + i - 1], pressedSection + i - 1, (currentSection.y - 1 * charHeightForThisSections + i * charHeightForThisSections));
                         drawSection(canvas, section);
                         sectionsOnSelector.add(section);
                     }
-                /* розміщення букв зверху*/
+                    /* розміщення букв зверху*/
                     for (int i = 1; i < upSections; i++) {
                         section = new Section(sections[i], i, (sectionFirst.y + i * charHeightForThisSections));
                         drawSection(canvas, section);
@@ -170,21 +178,19 @@ public class SideSelector extends View {
                     upPoint = sectionFirst.y + 3 *radius;
                     downPoint = sectionLast.y - charHeightForThisSections - radius;
 
-                    /*малюємо крапки*/
-                    drawPoint(canvas, upPoint);
-                    drawPoint(canvas, downPoint);
                     /*Знаходимо відстань між першою та останньою points*/
                     middleHeight = (downPoint - radius) - (upPoint + radius);
                     numSections = (int) (middleHeight/charHeight);
-//                    drawPoint(canvas, middleHeight/2 + upPoint + radius);
 
-                    /*find first letter after up point and draw to downpoint*/
-                        for(int i = 0; i < numSections; i++){
-                        section = new Section(sections[sections.length - downSections -2 + i], sections.length - downSections - 2 + i, (int)(upPoint + radius + i * charHeight + charHeight));
+                    /*find first letter after up point and draw letters to downpoint*/
+                    for(int i = 0; i < numSections; i++){
+                        section = new Section(sections[sections.length - downSections -4 + i], sections.length - downSections - 4 + i, (int)(upPoint + radius + i * charHeight + charHeight));
                         drawSection(canvas, section);
                         sectionsOnSelector.add(section);
                     }
-
+                    /*малюємо крапки*/
+                    drawPoint(canvas, upPoint);
+                    drawPoint(canvas, downPoint);
                 }
             }else {
                 /*малюємо крапки*/
