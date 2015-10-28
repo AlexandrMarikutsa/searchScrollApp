@@ -177,8 +177,12 @@ public class SideSelector extends View {
                     middleHeight = (downPoint - radius) - (upPoint + radius);
                     numSections = (int) (middleHeight/charHeight);
 //                    drawPoint(canvas, middleHeight/2 + upPoint + radius);
-                    for(int i = 1; i < numSections; i++){
-                        
+
+                    /*find first letter after up point and draw to downpoint*/
+                        for(int i = 0; i < numSections; i++){
+                        section = new Section(sections[sections.length - downSections -2 + i], sections.length - downSections - 2 + i, (int)(upPoint + radius + i * charHeight + charHeight));
+                        drawSection(canvas, section);
+                        sectionsOnSelector.add(section);
                     }
 
                 }
