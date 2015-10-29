@@ -83,7 +83,7 @@ public class SideSelector extends View {
     protected void onDraw(Canvas canvas) {
         initTextSize();
         getAllSections();
-        drawSections(canvas);
+        drawAllSections(canvas);
         super.onDraw(canvas);
     }
 
@@ -126,31 +126,51 @@ public class SideSelector extends View {
     }
 
     private void drawNotAllSections(Canvas canvas){
-        int numOfUpAndDownSec = (int) ((getHeight() - BOTTOM + textSize) / textSize);
-        if((numOfUpAndDownSec % 2) > 0){
+        int height = getHeight() - BOTTOM;
+        int f = textSize;
+
+        int numOfUpAndDownSec = (getHeight() - BOTTOM) / textSize;
+        textSize = height/numOfUpAndDownSec;
+        if((numOfUpAndDownSec % 2) == 0){
             upSections = numOfUpAndDownSec/2;
-            downSections = upSections;
+            downSections = upSections -1;
             for(int i = 0; i < upSections; i++){
                 Section section = sectionsAll.get(i);
                 section.y = i * textSize + textSize;
                 drawSection(canvas, section);
             }
-            upPoint = ((upSections - 1) * textSize + textSize + 2 * radius);
+            upPoint = ((upSections - 1) * textSize + textSize + textSize -  6 * radius);
             downPoint = (upPoint + 4 * radius);
             drawPoint(canvas, upPoint);
             drawPoint(canvas, downPoint);
 
             for(int i = 1; i < downSections + 1; i++){
                 Section section = sectionsAll.get(i + sectionsAll.size() - downSections - 1);
-                section.y = i * textSize + downPoint;
+                section.y = i * textSize + downPoint + 2 * radius;
                 drawSection(canvas, section);
             }
         }else {
+            upSections = numOfUpAndDownSec/2;
+            downSections = numOfUpAndDownSec/2;
+            for(int i = 0; i < upSections; i++){
+                Section section = sectionsAll.get(i);
+                section.y = i * textSize + textSize;
+                drawSection(canvas, section);
+            }
+            upPoint = ((upSections - 1) * textSize + textSize + textSize - 6 * radius);
+            downPoint = (upPoint + 4 * radius);
+            drawPoint(canvas, upPoint);
+            drawPoint(canvas, downPoint);
 
+            for(int i = 1; i < downSections + 1; i++){
+                Section section = sectionsAll.get(i + sectionsAll.size() - downSections - 1);
+                section.y = i * textSize + downPoint + 2 * radius;
+                drawSection(canvas, section);
+            }
         }
     }
 
-    public void drawSections(Canvas canvas){
+    public void drawAllSections(Canvas canvas){
         /*if all letters are on the screen*/
         if(countNumberOfElements() >= sectionsAll.size()){
             int i = 0;

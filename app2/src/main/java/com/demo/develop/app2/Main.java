@@ -34,7 +34,7 @@ public class Main extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        try {
-//            Thread.sleep(8000);
+//            Thread.sleep(6000);
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
