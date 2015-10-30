@@ -205,14 +205,14 @@ public class SideSelector extends View {
                             }
                         }
                     }
-                    if (pressedSection >= sections.length - downSections && pressedSection > upSections) {
+                    if (pressedSection >= sections.length - downSections - 1 && pressedSection > upSections) {
                         if (pressedSection > previousPressedSection && previousPressedSection < upSections) {
                             if (pressedSection == sections.length - downSections) {
                                 upSections = upSections - 1;
                                 downSections = downSections + 1;
                             } else {
-                                upSections = upSections + 1;
-                                downSections = downSections - 1;
+                                upSections = upSections - 1;
+                                downSections = downSections + 1;
                             }
                         } else {
                             if (pressedSection <= previousPressedSection) {
@@ -261,11 +261,19 @@ public class SideSelector extends View {
         drawPoint(canvas, downPoint);
         int numSecInnerPoints = numOfUpAndDownSec - 3;
 
+        if (upSections == numOfUpAndDownSec -3) {
         /*if points were down*/
-        for (int i = 0; i < numSecInnerPoints; i++){
-            Section section = new Section(sections[2 + i], 2 + i);
-            section.y = upPoint + radius + textSize +textSize * i;
-            sectionsAll.add(section);
+            for (int i = 0; i < numSecInnerPoints; i++) {
+                Section section = new Section(sections[2 + i], 2 + i);
+                section.y = upPoint + radius + textSize + textSize * i;
+                sectionsAll.add(section);
+            }
+        }else {
+            for (int i = 0; i < numSecInnerPoints; i++) {
+                Section section = new Section(sections[sections.length - 2 - downSections + i], sections.length - 2 - downSections + i);
+                section.y = upPoint + radius + textSize + textSize * i;
+                sectionsAll.add(section);
+            }
         }
         for (Section s : sectionsAll) {
             drawSection(canvas, s);
