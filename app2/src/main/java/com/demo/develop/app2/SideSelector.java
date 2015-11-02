@@ -188,65 +188,71 @@ public class SideSelector extends View {
         sectionsAll.add(sectionFirst);
         sectionLast = new Section(sections[sections.length - 1], sections.length - 1, numOfUpAndDownSec * textSize);
         sectionsAll.add(sectionLast);
-        if ((upSections > numOfUpAndDownSec - 3 || downSections < numOfUpAndDownSec - 3) &&
-                (upSections < numOfUpAndDownSec - 3 || downSections > numOfUpAndDownSec - 3)) {
-            if (pressedSection <= upSections || pressedSection >= sections.length - downSections) {
-                if (pressedSection != previousPressedSection) {
-                    if (pressedSection <= upSections && pressedSection < sections.length - downSections) {
-                        if (pressedSection > previousPressedSection) {
+//        int numMin = 2;
+//        if ((pressedSection < previousPressedSection && downSections == 2) || (pressedSection > previousPressedSection && upSections == 2)){
+//            numMin = 3;
+//        }
+        if (upSections != 1 && downSections != 1){
+            if (pressedSection != previousPressedSection) {
+                if (pressedSection <= upSections && pressedSection < sections.length - downSections) {
+                    if (pressedSection > previousPressedSection) {
+                        upSections = upSections + 1;
+                        downSections = downSections - 1;
+                    } else {
+                        if (pressedSection < previousPressedSection && previousPressedSection >= sections.length - downSections) {
                             upSections = upSections + 1;
                             downSections = downSections - 1;
                         } else {
-                            if (pressedSection < previousPressedSection && previousPressedSection >= sections.length - downSections) {
-                                upSections = upSections + 1;
-                                downSections = downSections - 1;
-                            } else {
-                                upSections = upSections - 1;
-                                downSections = downSections + 1;
-                            }
+                            upSections = upSections - 1;
+                            downSections = downSections + 1;
                         }
                     }
-                    if (pressedSection >= sections.length - downSections - 1 && pressedSection > upSections) {
-                        if (pressedSection > previousPressedSection && previousPressedSection < upSections) {
-                            if (pressedSection == sections.length - downSections) {
-                                upSections = upSections - 1;
-                                downSections = downSections + 1;
-                            } else {
-                                upSections = upSections - 1;
-                                downSections = downSections + 1;
-                            }
+                }
+                if (pressedSection >= sections.length - downSections - 1 && pressedSection > upSections) {
+                    if (pressedSection > previousPressedSection && previousPressedSection < upSections) {
+                        if (pressedSection == sections.length - downSections) {
+                            upSections = upSections - 1;
+                            downSections = downSections + 1;
                         } else {
-                            if (pressedSection <= previousPressedSection) {
-                                upSections = upSections - 1;
-                                downSections = downSections + 1;
-                            } else {
-                                upSections = upSections + 1;
-                                downSections = downSections - 1;
-                            }
+                            upSections = upSections - 1;
+                            downSections = downSections + 1;
+                        }
+                    } else {
+                        if (pressedSection <= previousPressedSection) {
+                            upSections = upSections - 1;
+                            downSections = downSections + 1;
+                        } else {
+                            upSections = upSections + 1;
+                            downSections = downSections - 1;
                         }
                     }
                 }
             }
-            for (int i = 1; i < upSections; i++) {
-                Section section = new Section(sections[i], i);
-                section.y = i * textSize + sectionFirst.y;
-                sectionsAll.add(section);
-            }
-            upPoint = ((upSections) * textSize + textSize - 6 * radius);
-            downPoint = (upPoint + 4 * radius);
-            drawPoint(canvas, upPoint);
-            drawPoint(canvas, downPoint);
+            if (upSections > 1 && downSections > 1) {
+                for (int i = 1; i < upSections; i++) {
+                    Section section = new Section(sections[i], i);
+                    section.y = i * textSize + sectionFirst.y;
+                    sectionsAll.add(section);
+                }
+                upPoint = ((upSections) * textSize + textSize - 6 * radius);
+                downPoint = (upPoint + 4 * radius);
+                drawPoint(canvas, upPoint);
+                drawPoint(canvas, downPoint);
 
-            for (int i = 0; i < downSections; i++) {
-                Section section = new Section(sections[sections.length - downSections + i], sections.length - downSections + i);
-                section.y = i * textSize + textSize + downPoint + 2 * radius;
-                drawSection(canvas, section);
-                sectionsAll.add(section);
+                for (int i = 0; i < downSections; i++) {
+                    Section section = new Section(sections[sections.length - downSections + i], sections.length - downSections + i);
+                    section.y = i * textSize + textSize + downPoint + 2 * radius;
+                    drawSection(canvas, section);
+                    sectionsAll.add(section);
+                }
+                for (Section s : sectionsAll) {
+                    drawSection(canvas, s);
+                }
+                previousPressedSection = pressedSection;
+            }else {
+                previousPressedSection = pressedSection;
+                drawSectionsBetweenPoints(canvas);
             }
-            for (Section s : sectionsAll) {
-                drawSection(canvas, s);
-            }
-            previousPressedSection = pressedSection;
         }else {
             drawSectionsBetweenPoints(canvas);
         }
@@ -260,22 +266,18 @@ public class SideSelector extends View {
         downPoint = sectionLast.y - radius - textSize;
         int numSecInnerPoints = numOfUpAndDownSec - 3;
 
-        if (upSections == numOfUpAndDownSec -3) {
+        if (downSections == 1 || upSections == 1) {
 
-            if (pressedSection > previousPressedSection) {
-                if ((pressedSection - firstLetterAfterUpPoint) > numSecInnerPoints - 2){
+            if (pressedSection > previousPressedSection && pressedSection < sections.length - 3) {
                     firstLetterAfterUpPoint++;
-                }
             }
-            if (pressedSection < previousPressedSection){
-                if ((pressedSection - firstLetterAfterUpPoint) > 1){
+            if (pressedSection < previousPressedSection && pressedSection > 2 && firstLetterAfterUpPoint > 2){
 //                    if (firstLetterAfterUpPoint > 3) {
                     firstLetterAfterUpPoint--;
 //                    }
-                }else {
-                    upSections = numOfUpAndDownSec - 3;
-                    drawSectionsFloatingList(canvas);
-                }
+//                }else {
+//                    upSections = numOfUpAndDownSec - 3;
+//                    drawSectionsFloatingList(canvas);
             }
             /*if points were down*/
             for (int i = 0; i < numSecInnerPoints; i++) {
