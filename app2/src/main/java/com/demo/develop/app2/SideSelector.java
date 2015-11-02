@@ -286,7 +286,7 @@ public class SideSelector extends View {
 //                    drawSectionsFloatingList(canvas);
             }
             /*if points were down*/
-            if (is) {
+            if (is || pressedSection == previousPressedSection) {
                 for (int i = 0; i < numSecInnerPoints; i++) {
                     Section section = new Section(sections[firstLetterAfterUpPoint + i], firstLetterAfterUpPoint + i);
                     section.y = upPoint + radius + textSize + textSize * i;
