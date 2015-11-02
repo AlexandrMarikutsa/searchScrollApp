@@ -43,6 +43,7 @@ public class SideSelector extends View {
     private Section sectionFirst;
     private Section sectionLast;
     private int firstLetterAfterUpPoint = 2;
+    private boolean centerLetters = false;
 
     public SideSelector(Context context) {
         super(context);
@@ -134,6 +135,7 @@ public class SideSelector extends View {
         numOfUpAndDownSec = (getHeight() - BOTTOM) / textSize;
         textSize = height/numOfUpAndDownSec;
         if(pressedSection == 0 || pressedSection == sections.length -1) {
+            centerLetters = false;
             if (pressedSection == 0){
                 previousPressedSection = 0;
             }else {
@@ -177,6 +179,7 @@ public class SideSelector extends View {
                 }
             }
         }else {
+            centerLetters = true;
             drawSectionsFloatingList(canvas);
         }
 
@@ -265,42 +268,53 @@ public class SideSelector extends View {
         upPoint = sectionFirst.y + 3 * radius;
         downPoint = sectionLast.y - radius - textSize;
         int numSecInnerPoints = numOfUpAndDownSec - 3;
+        boolean is = false;
 
         if (downSections == 1 || upSections == 1) {
 
             if (pressedSection > previousPressedSection && pressedSection < sections.length - 3) {
                     firstLetterAfterUpPoint++;
+                is = true;
             }
             if (pressedSection < previousPressedSection && pressedSection > 2 && firstLetterAfterUpPoint > 2){
 //                    if (firstLetterAfterUpPoint > 3) {
                     firstLetterAfterUpPoint--;
+                is = true;
 //                    }
 //                }else {
 //                    upSections = numOfUpAndDownSec - 3;
 //                    drawSectionsFloatingList(canvas);
             }
             /*if points were down*/
-            for (int i = 0; i < numSecInnerPoints; i++) {
-                Section section = new Section(sections[firstLetterAfterUpPoint + i], firstLetterAfterUpPoint + i);
-                section.y = upPoint + radius + textSize + textSize * i;
-                sectionsAll.add(section);
+            if (is) {
+                for (int i = 0; i < numSecInnerPoints; i++) {
+                    Section section = new Section(sections[firstLetterAfterUpPoint + i], firstLetterAfterUpPoint + i);
+                    section.y = upPoint + radius + textSize + textSize * i;
+                    sectionsAll.add(section);
 //                   firstLetterAfterUpPoint = sectionsAll.get()
+                }
+                previousPressedSection = pressedSection;
+            }else {
+                pressedSection = 0;
+                drawSections(canvas);
             }
-            previousPressedSection = pressedSection;
 //            }
         }else {
-            for (int i = 0; i < numSecInnerPoints; i++) {
-                Section section = new Section(sections[sections.length - 2 - downSections + i], sections.length - 2 - downSections + i);
-                section.y = upPoint + radius + textSize + textSize * i;
-                sectionsAll.add(section);
-                previousPressedSection = pressedSection;
-            }
+//            for (int i = 0; i < numSecInnerPoints; i++) {
+//                Section section = new Section(sections[sections.length - 2 - downSections + i], sections.length - 2 - downSections + i);
+//                section.y = upPoint + radius + textSize + textSize * i;
+//                sectionsAll.add(section);
+//                previousPressedSection = pressedSection;
+//            }
+//        }
+//        for (Section s : sectionsAll) {
+//            drawSection(canvas, s);
+//        }
+//        drawPoint(canvas, upPoint);
+//        drawPoint(canvas, downPoint);
+            pressedSection = 0;
+            drawSections(canvas);
         }
-        for (Section s : sectionsAll) {
-            drawSection(canvas, s);
-        }
-        drawPoint(canvas, upPoint);
-        drawPoint(canvas, downPoint);
     }
 
     public void drawSections(Canvas canvas){
