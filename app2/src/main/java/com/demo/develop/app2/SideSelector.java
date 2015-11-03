@@ -119,7 +119,6 @@ public class SideSelector extends View {
         private Character name;
         private int position;
         private int y;
-        private boolean visible;
 
         public Section(Character name, int position) {
             this.name = name;
@@ -273,11 +272,15 @@ public class SideSelector extends View {
         if (downSections == 1 || upSections == 1) {
             if (downSections == 1) {
                 if (pressedSection > previousPressedSection && letterAfterUpPoint < sections.length - numSecInnerPoints -2) {
-                    letterAfterUpPoint++;
+                    if (pressedSection > numSecInnerPoints + letterAfterUpPoint - 2) {
+                        letterAfterUpPoint++;
+                    }
                     is = true;
                 }
-                if (pressedSection < previousPressedSection && pressedSection > 2 && letterAfterUpPoint > 2) {
-                    letterAfterUpPoint--;
+                if (pressedSection < previousPressedSection && pressedSection > 2) {
+                    if (pressedSection < letterAfterUpPoint + 2) {
+                        letterAfterUpPoint--;
+                    }
                     is = true;
                 }
                 if (is || pressedSection == previousPressedSection) {
@@ -290,16 +293,24 @@ public class SideSelector extends View {
                     previousPressedSection = pressedSection;
                 }
                 else {
-                    pressedSection = 0;
-                    drawSections(canvas);
+                    upPoint = sectionFirst.y + 4 * radius;
+                    downPoint = upPoint + 4 * radius;
+                    for (int i = 0; i < numSecInnerPoints; i++){
+                        Section section = new Section(sections[sections.length - numSecInnerPoints -1 + i], sections.length - numSecInnerPoints - 1 + i);
+                        section.y = downPoint + textSize + textSize * i;
+                        sectionsAll.add(section);
+                    }
                 }
             }
             if (upSections == 1){
-                if (pressedSection > previousPressedSection && letterAfterDownPoint < sections.length - numSecInnerPoints - 2) {
-                    letterAfterDownPoint++;
+                if ((pressedSection > previousPressedSection) && (letterAfterDownPoint + numSecInnerPoints < sections.length - 2)) {
+                    if (pressedSection > letterAfterDownPoint + numSecInnerPoints - 2) {
+                        letterAfterDownPoint++;
+                    }
                     is = true;
                 }
                 if (pressedSection < previousPressedSection && letterAfterDownPoint > 2) {
+                    if (pressedSection < letterAfterDownPoint + 1)
                     letterAfterDownPoint--;
                     is = true;
                 }
@@ -312,19 +323,25 @@ public class SideSelector extends View {
 
                     previousPressedSection = pressedSection;
 
-                } else {
-                    pressedSection = sections.length -1;
-                    drawSections(canvas);
                 }
+                else {
+//                    if (pressedSection > previousPressedSection && (pressedSection > letterAfterDownPoint + numSecInnerPoints - 1)) {
+                        for (int i = 0; i < numSecInnerPoints; i++) {
+                            Section section = new Section(sections[1 + i], 1 + i);
+                            section.y = sectionFirst.y + textSize + i * textSize;
+                            sectionsAll.add(section);
+                        }
+                        upPoint = textSize + textSize * numSecInnerPoints + 4 * radius;
+                        downPoint = upPoint + 4 * radius;
+                    }
+//                }
             }
             for (Section s : sectionsAll) {
             drawSection(canvas, s);
             }
             drawPoint(canvas, upPoint);
             drawPoint(canvas, downPoint);
-        }else {
-            pressedSection = 0;
-            drawSections(canvas);
+            previousPressedSection = pressedSection;
         }
     }
 
