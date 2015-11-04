@@ -271,17 +271,22 @@ public class SideSelector extends View {
 
         if (downSections == 1 || upSections == 1) {
             if (downSections == 1) {
-                if (pressedSection > previousPressedSection && letterAfterUpPoint < sections.length - numSecInnerPoints -2) {
+                if (pressedSection > previousPressedSection && letterAfterUpPoint < sections.length - numSecInnerPoints - 2) {
                     if (pressedSection > numSecInnerPoints + letterAfterUpPoint - 2) {
                         letterAfterUpPoint++;
                     }
                     is = true;
                 }
-                if (pressedSection < previousPressedSection && pressedSection > 2) {
-                    if (pressedSection < letterAfterUpPoint + 2) {
-                        letterAfterUpPoint--;
+                if (pressedSection < previousPressedSection) {
+                    if (letterAfterUpPoint > 2 && pressedSection >= letterAfterUpPoint) {
+                        is = true;
+                        if (pressedSection == letterAfterUpPoint){
+                            letterAfterUpPoint--;
+                        }
                     }
-                    is = true;
+                    if (letterAfterUpPoint == 2 || pressedSection == 2) {
+                        is = false;
+                    }
                 }
                 if (is || pressedSection == previousPressedSection) {
                     for (int i = 0; i < numSecInnerPoints; i++) {
@@ -293,12 +298,22 @@ public class SideSelector extends View {
                     previousPressedSection = pressedSection;
                 }
                 else {
-                    upPoint = sectionFirst.y + 4 * radius;
-                    downPoint = upPoint + 4 * radius;
-                    for (int i = 0; i < numSecInnerPoints; i++){
-                        Section section = new Section(sections[sections.length - numSecInnerPoints -1 + i], sections.length - numSecInnerPoints - 1 + i);
-                        section.y = downPoint + textSize + textSize * i;
-                        sectionsAll.add(section);
+                    if (letterAfterUpPoint != sections.length - numSecInnerPoints - 2) {
+                        for (int i = 0; i < numSecInnerPoints; i++) {
+                            Section section = new Section(sections[1 + i], 1 + i);
+                            section.y = sectionFirst.y + textSize + textSize * i;
+                            sectionsAll.add(section);
+                        }
+                        upPoint = textSize + textSize * numSecInnerPoints + 4 * radius;
+                        downPoint = upPoint + 4 * radius;
+                        previousPressedSection = pressedSection;
+                    }else {
+
+                        downSections = upSections;
+                        upSections = 1;
+                        is = false;
+                        pressedSection = sections.length - 3;
+                        letterAfterDownPoint = sections.length - 1 - numSecInnerPoints;
                     }
                 }
             }
@@ -310,8 +325,9 @@ public class SideSelector extends View {
                     is = true;
                 }
                 if (pressedSection < previousPressedSection && letterAfterDownPoint > 2) {
-                    if (pressedSection < letterAfterDownPoint + 1)
-                    letterAfterDownPoint--;
+                    if (pressedSection < letterAfterDownPoint + 1) {
+                        letterAfterDownPoint--;
+                    }
                     is = true;
                 }
                 if (is || pressedSection == previousPressedSection) {
@@ -320,21 +336,26 @@ public class SideSelector extends View {
                         section.y = upPoint + radius + textSize + textSize * i;
                         sectionsAll.add(section);
                     }
-
                     previousPressedSection = pressedSection;
-
                 }
                 else {
-//                    if (pressedSection > previousPressedSection && (pressedSection > letterAfterDownPoint + numSecInnerPoints - 1)) {
+                    if (letterAfterDownPoint != 2) {
+                        upPoint = sectionFirst.y + 4 * radius;
+                        downPoint = upPoint + 4 * radius;
                         for (int i = 0; i < numSecInnerPoints; i++) {
-                            Section section = new Section(sections[1 + i], 1 + i);
-                            section.y = sectionFirst.y + textSize + i * textSize;
+                            Section section = new Section(sections[sections.length - numSecInnerPoints - 1 + i], sections.length - numSecInnerPoints - 1 + i);
+                            section.y = downPoint + textSize + i * textSize + radius;
                             sectionsAll.add(section);
                         }
-                        upPoint = textSize + textSize * numSecInnerPoints + 4 * radius;
-                        downPoint = upPoint + 4 * radius;
+                        previousPressedSection = pressedSection;
+                    }else {
+                        upSections = downSections;
+                        downSections = 1;
+                        pressedSection = 2;
+                        letterAfterUpPoint = 2;
+                        drawSectionsBetweenPoints(canvas);
                     }
-//                }
+                }
             }
             for (Section s : sectionsAll) {
             drawSection(canvas, s);
