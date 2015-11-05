@@ -41,7 +41,7 @@ public class Main extends Activity {
         setContentView(R.layout.activity_main);
 
         listView = (ListView) findViewById(R.id.list_view);
-        items = new ArrayList<String>();
+        items = new ArrayList<>();
 
         for (String ch : ArrayOfStrings.STRINGS) {
                 items.add(ch);

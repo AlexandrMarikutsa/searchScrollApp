@@ -43,7 +43,8 @@ public class SideSelector extends View {
     private Section sectionFirst;
     private Section sectionLast;
     private int firstLetterAfterUpPoint;
-    private int letterAfterUpPoint = 2;
+//    private int letterAfterUpPoint = 2;
+    private int letterAfterUpPoint;
     private int letterAfterDownPoint;
     private boolean centerLetters = false;
     private int numSecInnerPoints;
@@ -73,7 +74,7 @@ public class SideSelector extends View {
         super.onTouchEvent(event);
         int y = (int) event.getY();
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_UP) {
             for (Section s: sectionsAll) {
                 if (y >= (s.y - textSize) && y <= s.y) {
                     if(listener !=null){
@@ -146,39 +147,16 @@ public class SideSelector extends View {
             if ((numOfUpAndDownSec % 2) == 0) {
                 upSections = numOfUpAndDownSec / 2;
                 downSections = upSections - 1;
-//                for (int i = 0; i < upSections; i++) {
-//                    Section section = sectionsAll.get(i);
-//                    section.y = i * textSize + textSize;
-//                    drawSection(canvas, section);
-//                }
-//                upPoint = ((upSections - 1) * textSize + textSize + textSize - 6 * radius);
-//                downPoint = (upPoint + 4 * radius);
-//                drawPoint(canvas, upPoint);
-//                drawPoint(canvas, downPoint);
-//
-//                for (int i = 1; i < downSections + 1; i++) {
-//                    Section section = sectionsAll.get(i + sectionsAll.size() - downSections - 1);
-//                    section.y = i * textSize + downPoint + 2 * radius;
-//                    drawSection(canvas, section);
-//                }
+
+                letterAfterUpPoint = upSections - 1;
+//            letterAfterDownPoint = ----------------------------
             } else {
                 upSections = numOfUpAndDownSec / 2;
                 downSections = numOfUpAndDownSec / 2;
-//                for (int i = 0; i < upSections; i++) {
-//                    Section section = sectionsAll.get(i);
-//                    section.y = i * textSize + textSize;
-//                    drawSection(canvas, section);
-//                }
-//                upPoint = ((upSections - 1) * textSize + textSize + textSize - 6 * radius);
-//                downPoint = (upPoint + 4 * radius);
-//                drawPoint(canvas, upPoint);
-//                drawPoint(canvas, downPoint);
-//
-//                for (int i = 1; i < downSections + 1; i++) {
-//                    Section section = sectionsAll.get(i + sectionsAll.size() - downSections - 1);
-//                    section.y = i * textSize + downPoint + 2 * radius;
-//                    drawSection(canvas, section);
-//                }
+
+                letterAfterUpPoint = upSections - 1;
+//            letterAfterDownPoint = ----------------------------
+
             }
         }
         if (pressedSection < upSections - 1 || pressedSection > sections.length -1 - downSections + 1) {
@@ -186,7 +164,13 @@ public class SideSelector extends View {
         }
 
 
-        if (pressedSection == upSections - 1|| pressedSection == sections.length -1 - downSections + 1){
+        if (pressedSection >= upSections - 1 && pressedSection <= sections.length -1 - downSections + 1){
+            if (pressedSection == upSections - 1) {
+                previousPressedSection = pressedSection - 1;
+            }
+            if (pressedSection == sections.length -1 - downSections + 1){
+                previousPressedSection = pressedSection + 1;
+            }
             drawSectionsFloatingList(canvas);
         }else {
             for (int i = 0; i < upSections; i++) {
