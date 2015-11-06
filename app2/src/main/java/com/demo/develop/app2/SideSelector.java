@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -74,9 +75,13 @@ public class SideSelector extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
+
+        Log.e("On Touch : ", event.toString());
+
         int y = (int) event.getY();
 
-        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_UP) {
+        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_MOVE) {
+
             for (Section s: sectionsAll) {
                 if (y >= (s.y - textSize) && y <= s.y) {
                     if(listener !=null){
@@ -101,7 +106,7 @@ public class SideSelector extends View {
     public void initTextSize(){
         int height  = getHeight() - BOTTOM;
         int width = getWidth();
-        int widthPart = width/2;
+        int widthPart = width;
         if (widthPart > textSize){
             if(height/widthPart >= 7){
                 textSize = height/(height/widthPart);
@@ -138,7 +143,7 @@ public class SideSelector extends View {
     private void drawNotAllSections(Canvas canvas){
         int height = getHeight() - BOTTOM;
         numOfUpAndDownSec = (getHeight() - BOTTOM) / textSize;
-        textSize = height/numOfUpAndDownSec;
+//        textSize = height/numOfUpAndDownSec;
         if(pressedSection == 0 || pressedSection == sections.length -1) {
             letterAfterDownPoint = sections.length - numOfUpAndDownSec + 1;
             if (pressedSection == 0){
@@ -151,11 +156,13 @@ public class SideSelector extends View {
                 downSections = upSections - 1;
 
                 letterAfterUpPoint = upSections - 1;
+                upSectionsDefault = upSections;
             } else {
                 upSections = numOfUpAndDownSec / 2;
                 downSections = numOfUpAndDownSec / 2;
 
                 letterAfterUpPoint = upSections - 1;
+                upSectionsDefault = upSections;
             }
             upSectionsDefault = upSections;
             downSectionsDefault = downSections;
@@ -344,7 +351,7 @@ public class SideSelector extends View {
                         downPoint = upPoint + 4 * radius;
                         for (int i = 0; i < numSecInnerPoints; i++) {
                             Section section = new Section(sections[sections.length - numSecInnerPoints - 1 + i], sections.length - numSecInnerPoints - 1 + i);
-                            section.y = downPoint + textSize + i * textSize + radius;
+                            section.y = downPoint + textSize + i * textSize + radius;//------------------------------------------------------
                             sectionsAll.add(section);
                         }
                         previousPressedSection = pressedSection;
