@@ -51,6 +51,7 @@ public class SideSelector extends View {
     private int numSecInnerPoints;
     private int upSectionsDefault;
     private int downSectionsDefault;
+    private int yCoordinates;
 
     public SideSelector(Context context) {
         super(context);
@@ -82,6 +83,8 @@ public class SideSelector extends View {
 
         if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_MOVE) {
 
+            if (event.getAction() == MotionEvent.ACTION_MOVE && )
+
             for (Section s: sectionsAll) {
                 if (y >= (s.y - textSize) && y <= s.y) {
                     if(listener !=null){
@@ -90,6 +93,7 @@ public class SideSelector extends View {
                         currentSection = s;
 
                     }
+                    yCoordinates = s.y;
                     invalidate();
                 }
             }
