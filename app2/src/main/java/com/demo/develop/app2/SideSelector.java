@@ -48,6 +48,8 @@ public class SideSelector extends View {
     private int letterAfterDownPoint;
     private boolean centerLetters = false;
     private int numSecInnerPoints;
+    private int upSectionsDefault;
+    private int downSectionsDefault;
 
     public SideSelector(Context context) {
         super(context);
@@ -158,19 +160,22 @@ public class SideSelector extends View {
 //            letterAfterDownPoint = ----------------------------
 
             }
+            upSectionsDefault = upSections;
+            downSectionsDefault = downSections;
         }
         if (pressedSection < upSections - 1 || pressedSection > sections.length -1 - downSections + 1) {
-            previousPressedSection = pressedSection;
-        }
-
-
-        if (pressedSection >= upSections - 1 && pressedSection <= sections.length -1 - downSections + 1){
-            if (pressedSection == upSections - 1) {
+            if (pressedSection < upSections - 1) {
                 previousPressedSection = pressedSection - 1;
             }
-            if (pressedSection == sections.length -1 - downSections + 1){
-                previousPressedSection = pressedSection + 1;
-            }
+        }
+
+        if (pressedSection >= upSections - 1 && pressedSection <= sections.length -1 - downSections + 1){
+//            if (pressedSection == upSections - 1) {
+//                previousPressedSection = pressedSection + 1;
+//            }
+//            if (pressedSection == sections.length -1 - downSections + 1){
+//                previousPressedSection = pressedSection + 1;
+//            }
             drawSectionsFloatingList(canvas);
         }else {
             for (int i = 0; i < upSections; i++) {
@@ -202,6 +207,7 @@ public class SideSelector extends View {
             if (pressedSection != previousPressedSection) {
                 if (pressedSection <= upSections && pressedSection < sections.length - downSections) {
                     if (pressedSection > previousPressedSection) {
+//                        if (pressedSection == )
                         upSections = upSections + 1;
                         downSections = downSections - 1;
                     } else {
