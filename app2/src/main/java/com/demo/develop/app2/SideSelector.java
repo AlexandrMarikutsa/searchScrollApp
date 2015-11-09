@@ -22,12 +22,8 @@ public class SideSelector extends View {
 
     private static int BOTTOM = 4;
     private OnCustomEventListener listener;
-    private List<Section> sectionsOnSelector;
     private List<Section> sectionsAll;
-    private Section section;
-    private Section currentSection;
     private int pressedSection = 0;
-    private float charHeight;
     private Paint paint;
     private Paint paintPoint;
     private Paint paintCurrentLetter;
@@ -43,16 +39,9 @@ public class SideSelector extends View {
     private int previousPressedSection = 0;
     private Section sectionFirst;
     private Section sectionLast;
-    private int firstLetterAfterUpPoint;
-//    private int letterAfterUpPoint = 2;
     private int letterAfterUpPoint;
     private int letterAfterDownPoint;
-    private boolean centerLetters = false;
     private int numSecInnerPoints;
-    private int upSectionsDefault;
-    private int downSectionsDefault;
-    private int previousY;
-    private boolean inInnerPoint = false;
 
     public SideSelector(Context context) {
         super(context);
@@ -87,10 +76,8 @@ public class SideSelector extends View {
                     if(listener !=null){
                         listener.getChar(s.name);
                         pressedSection = s.position;
-                        currentSection = s;
 
                     }
-                    previousY = s.y;
                     invalidate();
                 }
             }
@@ -117,7 +104,6 @@ public class SideSelector extends View {
         }
         init();
         widthCenter = getMeasuredWidth() / 2;
-        charHeight = textSize;
     }
 
     private int countNumberOfElements(){
@@ -155,16 +141,12 @@ public class SideSelector extends View {
                 downSections = upSections - 1;
 
                 letterAfterUpPoint = upSections - 1;
-                upSectionsDefault = upSections;
             } else {
                 upSections = numOfUpAndDownSec / 2;
                 downSections = numOfUpAndDownSec / 2;
 
                 letterAfterUpPoint = upSections - 1;
-                upSectionsDefault = upSections;
             }
-            upSectionsDefault = upSections;
-            downSectionsDefault = downSections;
         }
         if (pressedSection < upSections - 1 || pressedSection > sections.length -1 - downSections + 1) {
             if (pressedSection < upSections - 1) {
