@@ -51,7 +51,8 @@ public class SideSelector extends View {
     private int numSecInnerPoints;
     private int upSectionsDefault;
     private int downSectionsDefault;
-    private int yCoordinates;
+    private int previousY;
+    private boolean inInnerPoint = false;
 
     public SideSelector(Context context) {
         super(context);
@@ -76,15 +77,11 @@ public class SideSelector extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
-
-        Log.e("On Touch : ", event.toString());
-
         int y = (int) event.getY();
 
-        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_MOVE) {
-
-            if (event.getAction() == MotionEvent.ACTION_MOVE && )
-
+        if((event.getAction() == MotionEvent.ACTION_MOVE && y > downPoint + 2*textSize) ||
+                (event.getAction() == MotionEvent.ACTION_MOVE && y < upPoint - 2 *textSize) || (event.getAction() == MotionEvent.ACTION_UP) ||
+                (event.getAction() == MotionEvent.ACTION_MOVE && y > upPoint + 2 *textSize && y < downPoint - 2 *textSize)){
             for (Section s: sectionsAll) {
                 if (y >= (s.y - textSize) && y <= s.y) {
                     if(listener !=null){
@@ -93,7 +90,7 @@ public class SideSelector extends View {
                         currentSection = s;
 
                     }
-                    yCoordinates = s.y;
+                    previousY = s.y;
                     invalidate();
                 }
             }
@@ -145,9 +142,7 @@ public class SideSelector extends View {
     }
 
     private void drawNotAllSections(Canvas canvas){
-        int height = getHeight() - BOTTOM;
         numOfUpAndDownSec = (getHeight() - BOTTOM) / textSize;
-//        textSize = height/numOfUpAndDownSec;
         if(pressedSection == 0 || pressedSection == sections.length -1) {
             letterAfterDownPoint = sections.length - numOfUpAndDownSec + 1;
             if (pressedSection == 0){
@@ -195,8 +190,6 @@ public class SideSelector extends View {
                 drawSection(canvas, section);
             }
         }
-
-
 }
 
     private void drawSectionsFloatingList(Canvas canvas) {
@@ -395,8 +388,7 @@ public class SideSelector extends View {
         int i = 0;
         for (Section section : sectionsAll) {
             i++;
-            int thisCharHeight = (getHeight() - BOTTOM) / sections.length;
-            section.y = i * thisCharHeight;
+            section.y = i * textSize;
             drawSection(canvas, section);
         }
     }
@@ -442,11 +434,5 @@ public class SideSelector extends View {
     public void drawPoint(Canvas canvas, int point){
         radius = textSize/8;
         canvas.drawCircle(widthCenter, point, radius, paintPoint);
-    }
-
-    private void getSections(){
-        if(getHeight() <= charHeight*sections.length) {
-
-        }
     }
 }
